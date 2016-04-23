@@ -1,0 +1,101 @@
+/* 
+    This style sheet stylizes the controls inside our
+    Web Page Maker JavaFX application. Note that controls
+    in the UI must have the same class as those below in 
+    order to be rendered using those properties.
+
+    Author:	Daniel Peterson
+    Version:	1.0
+*/
+
+.edit_toolbar {
+    -fx-spacing: 20;
+    -fx-background-color: darkseagreen;
+}
+
+.color_chooser_pane {
+    -fx-background-color:seashell;
+    -fx-font-weight:bold;
+    -fx-font-size:20;
+}
+
+.max_pane {
+    -fx-fit-to-height: true;
+    -fx-fit-to-width: true;
+    -fx-background-color:#ccccff;
+}
+
+.bordered_pane {
+    -fx-background-color: #add8e6;
+    -fx-background-radius: 10.0;
+    -fx-padding: 0;
+    -fx-spacing: 0;
+    -fx-border-width: 2px;
+    -fx-border-color: #add8e6;
+}
+
+.heading_label {
+    -fx-font-size: 30;
+    -fx-font-weight: bold;
+}
+
+.subheading_label {
+    -fx-font-size: 14pt;
+    -fx-font-weight: bold;
+}
+
+.prompt_label {
+    -fx-font-size: 13pt;
+    -fx-font-weight: bold;
+}
+
+.prompt_text_field {
+    -fx-font-size: 13pt;
+}
+
+.render_canvas {
+    -fx-background-color:#ffef84;
+}
+
+.toolbars {
+    -fx-background-color: #add8e6;
+    -fx-background-radius: 5.0;
+    -fx-padding: 0;
+    -fx-spacing: 0;
+    -fx-border-width: 2px;
+    -fx-border-color: black;
+    -fx-row-valignment: center;
+    -fx-font-family: "Times New Roman", Times, serif;
+}
+
+.check_vbox {
+    -fx-padding: 7 0 0 10;
+}
+
+.scroll_pane {
+    -fx-background: #ffffe0;
+}
+
+.options_pane {
+    -fx-background-color: #ffe4e1;
+}
+
+.row {
+    -fx-padding: 15 15 0 20;
+}
+
+.text_field {
+    -fx-background-color: black;
+}
+
+.hbox {
+    -fx-padding: 15;
+}
+
+.hbox2 {
+    -fx-padding: 10;
+}
+
+.combobox {
+    -fx-padding: 3;
+}

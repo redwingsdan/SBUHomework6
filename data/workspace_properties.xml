@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    This XML file allows us to easily customize the look and language used
+    in our program's user interface. Note that this properties file is only
+    for the workspace controls, which are custom for each application
+-->
+<properties>
+    <property_list>
+        <!-- PROGRAM ICON FILES -->
+        <property name = "ADD_ICON"         value = "Add.png"></property>
+        <property name = "MINUS_ICON"       value = "Minus.png"></property>
+        
+        <!-- TOOLTIPS FOR BUTTONS -->
+        <property name = "ADD_TOOLTIP"      value = "Add Variable/Method"></property>
+        <property name = "MINUS_TOOLTIP"    value = "Remove Variable/Method"></property>
+	
+	<!-- MESSAGES -->
+		
+	<!-- ERROR MESSAGES AND TITLES FOR THEIR DIALOGS -->
+
+    </property_list>
+    <property_options_list>
+    </property_options_list>
+</properties>
