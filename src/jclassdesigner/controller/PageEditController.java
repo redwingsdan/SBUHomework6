@@ -1,26 +1,26 @@
 package jclassdesigner.controller;
 
-import jclassdesigner.data.MyRectangle;
+import saf.AppTemplate;
+import saf.ui.AppGUI;
+import saf.ui.AppMessageDialogSingleton;
+import jclassdesigner.data.Rectangles;
+import jclassdesigner.data.DataManager;
+import jclassdesigner.gui.Workspace;
 import java.util.ArrayList;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
-import jclassdesigner.data.DataManager;
-import saf.AppTemplate;
-import jclassdesigner.gui.Workspace;
-import saf.ui.AppGUI;
-import saf.ui.AppMessageDialogSingleton;
 
 /**
  * @author Daniel Peterson
  */
 public class PageEditController {
 
-    static final String DEFAULT_CLASS_NAME = "Default_Class";
-    static final String DEFAULT_PACKAGE_NAME = "Default_Package";
+    static final String DEFAULT_CLASS_NAME = "Insert_Class_Name";
+    static final String DEFAULT_PACKAGE_NAME = "Insert_Package_Name";
     static final String DUPLICATE_TITLE = "Warning";
-    static final String DUPLICATE_CLASS_MESSAGE = "There are two of the same class names within the same package";
+    static final String DUPLICATE_CLASS_MESSAGE = "There are currently two classes with the same name in the same package";
 
     AppTemplate app;
 
@@ -29,12 +29,11 @@ public class PageEditController {
     boolean selecting;
     boolean isClassAdding;
 
-    ArrayList<MyRectangle> classes;
-
+    ArrayList<Rectangles> classes;
+    double posX;
+    double posY;
     double startX;
     double startY;
-    double mouseX;
-    double mouseY;
     
     public PageEditController(AppTemplate initApp) {
         app = initApp;
@@ -43,7 +42,7 @@ public class PageEditController {
         classes = new ArrayList<>();
     }
 
-    public ArrayList<MyRectangle> getClasses() {
+    public ArrayList<Rectangles> getClasses() {
         return classes;
     }
 
@@ -67,7 +66,7 @@ public class PageEditController {
         isClassAdding = true;
 
         Label className = new Label(DEFAULT_CLASS_NAME);
-        MyRectangle umlclass = new MyRectangle(className, DEFAULT_PACKAGE_NAME);
+        Rectangles umlclass = new Rectangles(className, DEFAULT_PACKAGE_NAME);
         umlclass.setSelected(true);
         umlclass.setStyle("-fx-border-color: yellow;" + "-fx-border-width: 5px");
         classes.add(umlclass);
@@ -77,7 +76,7 @@ public class PageEditController {
         dataManager.getNodes().add(umlclass);
         workspace.getInnerPane().getChildren().add(umlclass);
 
-        handleDragRequest((MyRectangle) umlclass);
+        handleDragRequest((Rectangles) umlclass);
     }
 
     public void handleSelectRequest() {
@@ -92,7 +91,7 @@ public class PageEditController {
 
     public void handleDragRequest(Pane box) {
         Workspace workspace = (Workspace) app.getWorkspaceComponent();
-        MyRectangle theBox = (MyRectangle) box;
+        Rectangles theBox = (Rectangles) box;
         theBox.setOnMousePressed(pressed -> {
             if (!isClassAdding) {
                 workspace.reloadWorkspace();
@@ -115,10 +114,10 @@ public class PageEditController {
                 myClass.setStyle("-fx-border-color: yellow;" + "-fx-border-width: 5px");
                 return myClass;
             }).map((e) -> {
-                mouseX = pressed.getSceneX();
+                posX = pressed.getSceneX();
                 return e;
             }).map((e) -> {
-                mouseY = pressed.getSceneY();
+                posY = pressed.getSceneY();
                 return e;
             }).map((e) -> {
                 startX = theBox.getLayoutX();
@@ -129,15 +128,15 @@ public class PageEditController {
         });
 
         theBox.setOnMouseDragged(dragged -> {
-            classes.stream().filter((myClass) -> ((Pane) myClass == theBox)).filter((myClass) -> (gui.getPrimaryScene().getCursor().toString().equals("DEFAULT") && myClass.isSelected())).map((_item) -> dragged.getSceneX() - mouseX).map((diffX) -> {
-                double diffY = dragged.getSceneY() - mouseY;
+            classes.stream().filter((myClass) -> ((Pane) myClass == theBox)).filter((myClass) -> (gui.getPrimaryScene().getCursor().toString().equals("DEFAULT") && myClass.isSelected())).map((_item) -> dragged.getSceneX() - posX).map((diffX) -> {
+                double diffY = dragged.getSceneY() - posY;
                 startX += diffX;
                 startY += diffY;
                 return diffX;
             }).map((e) -> startX).map((scaledX) -> {
                 double scaledY = startY;
-                mouseX = dragged.getSceneX();
-                mouseY = dragged.getSceneY();
+                posX = dragged.getSceneX();
+                posY = dragged.getSceneY();
                 theBox.setLayoutX(scaledX);
                 theBox.setLayoutY(scaledY);
                 return scaledX;
@@ -159,8 +158,8 @@ public class PageEditController {
         });
     }
 
-    public boolean checkClassDuplicateClassUpdate(MyRectangle umlclass, String className) {
-        for (MyRectangle myClass : classes) {
+    public boolean checkClassDuplicateClassUpdate(Rectangles umlclass, String className) {
+        for (Rectangles myClass : classes) {
             if (myClass != umlclass) {
                 if (className.equals(myClass.getClassName())) {
                     if (myClass.getPackageName().equals(umlclass.getPackageName())) {
@@ -181,8 +180,8 @@ public class PageEditController {
         return false;
     }
 
-    public boolean checkClassDuplicatePackageUpdate(MyRectangle umlclass, String packageName) {
-        for (MyRectangle myClass : classes) {
+    public boolean checkClassDuplicatePackageUpdate(Rectangles umlclass, String packageName) {
+        for (Rectangles myClass : classes) {
             if (myClass != umlclass) {
                 if (packageName.equals(myClass.getPackageName())) {
                     if (myClass.getClassName().equals(umlclass.getClassName())) {

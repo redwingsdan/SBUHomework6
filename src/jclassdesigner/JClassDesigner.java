@@ -2,14 +2,14 @@ package jclassdesigner;
 
 import java.util.Locale;
 import saf.components.AppComponentsBuilder;
+import saf.components.AppWorkspaceComponent;
 import saf.components.AppDataComponent;
 import saf.components.AppFileComponent;
 import saf.AppTemplate;
-import saf.components.AppWorkspaceComponent;
+import static javafx.application.Application.launch;
 import jclassdesigner.data.DataManager;
 import jclassdesigner.file.FileManager;
 import jclassdesigner.gui.Workspace;
-import static javafx.application.Application.launch;
 
 /**
  * @author Daniel Peterson

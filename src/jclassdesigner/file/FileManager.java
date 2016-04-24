@@ -28,9 +28,9 @@ import javax.json.JsonWriter;
 import javax.json.JsonWriterFactory;
 import javax.json.stream.JsonGenerator;
 import jclassdesigner.data.DataManager;
-import jclassdesigner.data.MethodBox;
-import jclassdesigner.data.MyRectangle;
-import jclassdesigner.data.VariableBox;
+import jclassdesigner.data.Methods;
+import jclassdesigner.data.Rectangles;
+import jclassdesigner.data.Variables;
 import saf.components.AppDataComponent;
 import saf.components.AppFileComponent;
 
@@ -92,13 +92,13 @@ public class FileManager implements AppFileComponent {
         // NOW BUILD THE JSON OBJCTS TO SAVE
         JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
         ArrayList<Node> nodes = dataManager.getNodes();
-        nodes.stream().filter((node) -> (node instanceof MyRectangle)).map((node) -> (MyRectangle) node).map((umlClass) -> {
+        nodes.stream().filter((node) -> (node instanceof Rectangles)).map((node) -> (Rectangles) node).map((umlClass) -> {
             double layoutX = umlClass.getLayoutX();
             double layoutY = umlClass.getLayoutY();
             String className = umlClass.getClassName();
             String packageName = umlClass.getPackageName();
             String parentName = "";
-            ArrayList<MyRectangle> parents = umlClass.getParents();
+            ArrayList<Rectangles> parents = umlClass.getParents();
             if (parents == null || parents.isEmpty() || parents.get(0).getClassName().equals("")) {
                 parentName = "";
             } else {
@@ -107,8 +107,8 @@ public class FileManager implements AppFileComponent {
                     parentName += ", " + parents.get(i).getClassName();
                 }
             }
-            ArrayList<VariableBox> variables = umlClass.getVariables();
-            ArrayList<MethodBox> methods = umlClass.getMethods();
+            ArrayList<Variables> variables = umlClass.getVariables();
+            ArrayList<Methods> methods = umlClass.getMethods();
             if (packageName == null) {
                 packageName = "";
             }
@@ -165,16 +165,16 @@ public class FileManager implements AppFileComponent {
         }
     }
 
-    private JsonArray makeJsonVariableArray(ArrayList<VariableBox> variables) {
+    private JsonArray makeJsonVariableArray(ArrayList<Variables> variables) {
         JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
         variables.stream().map((variable) -> {
             String str = "no";
-            if (variable.getIsStatic()) {
+            if (variable.getStatic()) {
                 str = "yes";
             }
             JsonObject varJson = Json.createObjectBuilder()
                     .add(JSON_VARIABLE_NAME, variable.getName())
-                    .add(JSON_RETURN_TYPE, variable.getType())
+                    .add(JSON_RETURN_TYPE, variable.getVal())
                     .add(JSON_ACCESS, variable.getAccess())
                     .add(JSON_STATIC, str)
                     .build();
@@ -186,7 +186,7 @@ public class FileManager implements AppFileComponent {
         return jA;
     }
 
-    private JsonArray makeJsonMethodsArray(ArrayList<MethodBox> methods) {
+    private JsonArray makeJsonMethodsArray(ArrayList<Methods> methods) {
         JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
         methods.stream().map((method) -> {
             String str = "no";
@@ -194,7 +194,7 @@ public class FileManager implements AppFileComponent {
             if (method.getIsStatic()) {
                 str = "yes";
             }
-            if (method.getIsAbstract()) {
+            if (method.getAbstract()) {
                 str1 = "yes";
             }
             JsonObject methodJson = Json.createObjectBuilder()
@@ -266,10 +266,10 @@ public class FileManager implements AppFileComponent {
         ArrayList<Node> nodes = dataManager.getNodes();
         for (int i = 0; i < nodesJsonArray.size(); i++) {
             JsonObject nodeJso = nodesJsonArray.getJsonObject(i);
-            MyRectangle umlclass = new MyRectangle();
+            Rectangles umlclass = new Rectangles();
             umlclass.setClassName(nodeJso.getString(JSON_CLASS_NAME));
             umlclass.setPackageName(nodeJso.getString(JSON_PACKAGE_NAME));
-            umlclass.getParents().add(new MyRectangle(new Label(nodeJso.getString(JSON_PARENT_NAME)), ""));
+            umlclass.getParents().add(new Rectangles(new Label(nodeJso.getString(JSON_PARENT_NAME)), ""));
 
             if (nodeJso.getString(JSON_INTERFACE).equals("yes")) {
                 umlclass.setIsInterface(true);
@@ -295,7 +295,7 @@ public class FileManager implements AppFileComponent {
         }
     }
 
-    private void loadVariables(ArrayList<VariableBox> list, JsonArray variablesJA) {
+    private void loadVariables(ArrayList<Variables> list, JsonArray variablesJA) {
         for (int i = 0; i < variablesJA.size(); i++) {
             JsonObject varJso = variablesJA.getJsonObject(i);
             String varName = varJso.getString(JSON_VARIABLE_NAME);
@@ -307,12 +307,12 @@ public class FileManager implements AppFileComponent {
             } else if (varJso.getString(JSON_STATIC).equals("no")) {
                 isStatic = false;
             }
-            VariableBox var = new VariableBox(varName, returnType, access, isStatic);
+            Variables var = new Variables(varName, returnType, access, isStatic);
             list.add(var);
         }
     }
 
-    private void loadMethods(ArrayList<MethodBox> list, JsonArray methodsJA) {
+    private void loadMethods(ArrayList<Methods> list, JsonArray methodsJA) {
         for (int i = 0; i < methodsJA.size(); i++) {
             JsonObject methodJso = methodsJA.getJsonObject(i);
             String methodName = methodJso.getString(JSON_METHOD_NAME);
@@ -331,7 +331,7 @@ public class FileManager implements AppFileComponent {
                 isAbstract = false;
             }
 
-            MethodBox method = new MethodBox(methodName, returnType, access, isStatic, isAbstract);
+            Methods method = new Methods(methodName, returnType, access, isStatic, isAbstract);
 
             JsonArray argJA = methodJso.getJsonArray(JSON_METHOD_ARGS);
             for (int j = 0; j < argJA.size(); j++) {
@@ -362,7 +362,7 @@ public class FileManager implements AppFileComponent {
         try {
             DataManager dataManager = (DataManager) data;
             for (Node node : dataManager.getNodes()) {
-                MyRectangle umlClass = (MyRectangle) node;
+                Rectangles umlClass = (Rectangles) node;
                 String packageName = umlClass.getPackageName();
                 String tmp = "";
                 if (packageName.indexOf(".") > 0) {
@@ -401,7 +401,7 @@ public class FileManager implements AppFileComponent {
         }
     }
 
-    private void fillArrayListWithData(MyRectangle umlClass, ArrayList<String> list) {
+    private void fillArrayListWithData(Rectangles umlClass, ArrayList<String> list) {
         String packageLine = "package " + umlClass.getPackageName() + ";";
         list.add(packageLine);
 
@@ -415,11 +415,11 @@ public class FileManager implements AppFileComponent {
 
         classTitle += "class " + umlClass.getClassName() + " ";
 
-        ArrayList<MyRectangle> parents = umlClass.getParents();
+        ArrayList<Rectangles> parents = umlClass.getParents();
         boolean printed = false;
         Iterator iter = parents.iterator();
         while (iter.hasNext()) {
-            MyRectangle parentClass = (MyRectangle) iter.next();
+            Rectangles parentClass = (Rectangles) iter.next();
 
             if (!printed) {
                 if (parentClass.getIsInterface()) {
@@ -447,24 +447,24 @@ public class FileManager implements AppFileComponent {
         list.add("}");
     }
 
-    private void addVariables(MyRectangle umlClass, ArrayList<String> list) {
-        ArrayList<VariableBox> variables = umlClass.getVariables();
+    private void addVariables(Rectangles umlClass, ArrayList<String> list) {
+        ArrayList<Variables> variables = umlClass.getVariables();
         String varAccess = "";
         String varIsStatic = "";
         String varIsFinal = "";
         String varType = "";
         String varName = "";
-        for (VariableBox variable : variables) {
+        for (Variables variable : variables) {
             String varLine = "";
             varAccess = variable.getAccess();
-            if (variable.getIsStatic()) {
+            if (variable.getStatic()) {
                 varIsStatic = "static";
             }
             varName = variable.getName();
             if (isAllUpperCase(varName)) {
                 varIsFinal = "final";
             }
-            varType = variable.getType();
+            varType = variable.getVal();
 
             varLine += varAccess + " ";
             if (varIsStatic.equals("static")) {
@@ -478,8 +478,8 @@ public class FileManager implements AppFileComponent {
         }
     }
 
-    private void addMethods(MyRectangle umlClass, ArrayList<String> list) {
-        ArrayList<MethodBox> methods = umlClass.getMethods();
+    private void addMethods(Rectangles umlClass, ArrayList<String> list) {
+        ArrayList<Methods> methods = umlClass.getMethods();
         String methodAccess = "";
         String methodAbstract = "";
         String methodType = "";
@@ -487,12 +487,12 @@ public class FileManager implements AppFileComponent {
         String methodStatic = "";
         TreeMap<String, String> methodArgs;
 
-        for (MethodBox method : methods) {
+        for (Methods method : methods) {
             String methodLine = "";
             methodAccess = method.getAccess();
             methodType = method.getType();
             methodName = method.getName();
-            if (method.getIsAbstract()) {
+            if (method.getAbstract()) {
                 methodAbstract = "abstract";
             }
             if (method.getIsStatic()) {

@@ -14,7 +14,7 @@
 }
 
 .color_chooser_pane {
-    -fx-background-color:seashell;
+    -fx-background-color: seashell;
     -fx-font-weight:bold;
     -fx-font-size:20;
 }
@@ -22,16 +22,16 @@
 .max_pane {
     -fx-fit-to-height: true;
     -fx-fit-to-width: true;
-    -fx-background-color:#ccccff;
+    -fx-background-color: #ccccff;
 }
 
 .bordered_pane {
-    -fx-background-color: #add8e6;
+    -fx-background-color: #ccccff;
     -fx-background-radius: 10.0;
     -fx-padding: 0;
     -fx-spacing: 0;
     -fx-border-width: 2px;
-    -fx-border-color: #add8e6;
+    -fx-border-color: #aaaaff;
 }
 
 .heading_label {
@@ -58,10 +58,10 @@
 }
 
 .toolbars {
-    -fx-background-color: #add8e6;
+    -fx-background-color: #ccccff;
     -fx-background-radius: 5.0;
-    -fx-padding: 0;
-    -fx-spacing: 0;
+    -fx-padding: 7;
+    -fx-spacing: 2;
     -fx-border-width: 2px;
     -fx-border-color: black;
     -fx-row-valignment: center;
@@ -73,11 +73,11 @@
 }
 
 .scroll_pane {
-    -fx-background: #ffffe0;
+    -fx-background: #fafafa;
 }
 
 .options_pane {
-    -fx-background-color: #ffe4e1;
+    -fx-background-color: #eed5b7;
 }
 
 .row {

@@ -24,7 +24,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import static jclassdesigner.PropertyType.ADD_ICON;
 import static jclassdesigner.PropertyType.MINUS_ICON;
-import jclassdesigner.data.MyRectangle;
+import jclassdesigner.data.Rectangles;
 import jclassdesigner.controller.PageEditController;
 import jclassdesigner.data.DataManager;
 import jclassdesigner.file.FileManager;
@@ -338,7 +338,7 @@ public class Workspace extends AppWorkspaceComponent {
             ArrayList<Node> nodes = dataManager.getNodes();
             if (!nodes.isEmpty()) {
                 pageEditController.setIsClassAdding(true);
-                nodes.stream().map((node) -> (MyRectangle) node).map((umlclass) -> {
+                nodes.stream().map((node) -> (Rectangles) node).map((umlclass) -> {
                     pageEditController.getClasses().add(umlclass);
                     return umlclass;
                 }).map((umlclass) -> {
@@ -355,8 +355,8 @@ public class Workspace extends AppWorkspaceComponent {
             Iterator iter = innerPane.getChildren().iterator();
             while (iter.hasNext()) {
                 Object obj = iter.next();
-                if (obj instanceof MyRectangle) {
-                    MyRectangle umlclass = (MyRectangle) obj;
+                if (obj instanceof Rectangles) {
+                    Rectangles umlclass = (Rectangles) obj;
                     umlclass.setStyle("-fx-border-color: black;" + "-fx-border-width: 1px");
                 }
                 pageEditController.getClasses().stream().forEach((myClass) -> {
