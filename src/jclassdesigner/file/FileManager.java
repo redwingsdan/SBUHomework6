@@ -1,5 +1,11 @@
 package jclassdesigner.file;
 
+import saf.components.AppDataComponent;
+import saf.components.AppFileComponent;
+import jclassdesigner.data.DataManager;
+import jclassdesigner.data.Methods;
+import jclassdesigner.data.Rectangles;
+import jclassdesigner.data.Variables;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
@@ -27,12 +33,6 @@ import javax.json.JsonReader;
 import javax.json.JsonWriter;
 import javax.json.JsonWriterFactory;
 import javax.json.stream.JsonGenerator;
-import jclassdesigner.data.DataManager;
-import jclassdesigner.data.Methods;
-import jclassdesigner.data.Rectangles;
-import jclassdesigner.data.Variables;
-import saf.components.AppDataComponent;
-import saf.components.AppFileComponent;
 
 /**
  * This class serves as the file management component for this application,
@@ -44,33 +44,39 @@ import saf.components.AppFileComponent;
  */
 public class FileManager implements AppFileComponent {
 
-    static final String JSON_UML_DIAGRAMS = "UML Diagram";
+    static final String JSON_UML_DIAGRAM = "UML Diagram";
+    
     static final String JSON_CLASS_NAME = "Class Name";
     static final String JSON_PACKAGE_NAME = "Package Name";
-    static final String JSON_PARENT_NAME = "Parents";
-    static final String JSON_VARIABLE_NAME = "Variable Name";
+    static final String JSON_PARENTS = "Parents";
+    
+    static final String JSON_METHODS = "Methods";
     static final String JSON_METHOD_NAME = "Method Name";
     static final String JSON_VARIABLES = "Variables";
-    static final String JSON_METHODS = "Methods";
-    static final String JSON_MIN_X = "MinX";
-    static final String JSON_MIN_Y = "MinY";
-    static final String JSON_MAX_X = "MaxX";
-    static final String JSON_MAX_Y = "MaxY";
+    static final String JSON_VARIABLE_NAME = "Variable Name";
+    
     static final String JSON_LAYOUT_X = "LayoutX";
     static final String JSON_LAYOUT_Y = "LayoutY";
-    static final String JSON_RETURN_TYPE = "Type";
-    static final String JSON_ACCESS = "Access";
-    static final String JSON_STATIC = "Is Static";
+    static final String JSON_MAX_X = "MaxX";
+    static final String JSON_MAX_Y = "MaxY";
+    static final String JSON_MIN_X = "MinX";
+    static final String JSON_MIN_Y = "MinY";
+    
     static final String JSON_ABSTRACT = "Is Abstract";
-    static final String JSON_METHOD_ARGS = "Arguments";
-    static final String JSON_METHOD_ARG_NAME = "Argument Name";
-    static final String JSON_METHOD_ARG_TYPE = "Argument Type";
     static final String JSON_INTERFACE = "Is Interface";
-    static final String JSON_TOP = "Top Padding";
+    static final String JSON_STATIC = "Is Static";
+    static final String JSON_RET_TYPE = "Type";
+    
+    static final String JSON_ACCESS = "Access";
+    static final String JSON_METHOD_ARGS = "Arguments";
+    static final String JSON_METH_ARG_NAME = "Argument Name";
+    static final String JSON_METH_ARG_TYPE = "Argument Type";
+      
     static final String JSON_BOTTOM = "Bottom Padding";
-    static final String JSON_RIGHT = "Right Padding";
     static final String JSON_LEFT = "Left Padding";
+    static final String JSON_RIGHT = "Right Padding";
     static final String JSON_SPACING = "Spacing";
+    static final String JSON_TOP = "Top Padding";
 
     /**
      * This method is for saving user work, which in the case of this
@@ -85,7 +91,8 @@ public class FileManager implements AppFileComponent {
      * the file.
      */
     @Override
-    public void saveData(AppDataComponent data, String filePath) throws IOException {
+    public void saveData(AppDataComponent data, String filePath) throws IOException 
+    {
         // GET THE DATA
         DataManager dataManager = (DataManager) data;
 
@@ -97,37 +104,48 @@ public class FileManager implements AppFileComponent {
             double layoutY = umlClass.getLayoutY();
             String className = umlClass.getClassName();
             String packageName = umlClass.getPackageName();
-            String parentName = "";
+            String parentName = null;
             ArrayList<Rectangles> parents = umlClass.getParents();
-            if (parents == null || parents.isEmpty() || parents.get(0).getClassName().equals("")) {
+            if (parents == null || parents.isEmpty() || parents.get(0).getClassName().equals("")) 
+            {
                 parentName = "";
-            } else {
+            } 
+            else 
+            {
                 parentName += parents.get(0).getClassName();
-                for (int i = 1; i < parents.size(); i++) {
+                for (int i = 1; i < parents.size(); i++) 
+                {
                     parentName += ", " + parents.get(i).getClassName();
                 }
             }
             ArrayList<Variables> variables = umlClass.getVariables();
             ArrayList<Methods> methods = umlClass.getMethods();
-            if (packageName == null) {
+            if (packageName == null) 
+            {
                 packageName = "";
             }
-            String checkInterface;
-            if (umlClass.getIsInterface()) {
+            String checkInterface = null;
+            if (umlClass.getIsInterface())
+            {
                 checkInterface = "yes";
-            } else {
+            } 
+            else 
+            {
                 checkInterface = "no";
             }
-            String checkAbstract;
-            if (umlClass.getIsAbstract()) {
+            String checkAbstract = null;
+            if (umlClass.getIsAbstract()) 
+            {
                 checkAbstract = "yes";
-            } else {
+            }
+            else 
+            {
                 checkAbstract = "no";
             }
             JsonObject umlClassJson = Json.createObjectBuilder()
                     .add(JSON_CLASS_NAME, className)
                     .add(JSON_PACKAGE_NAME, packageName)
-                    .add(JSON_PARENT_NAME, parentName)
+                    .add(JSON_PARENTS, parentName)
                     .add(JSON_INTERFACE, checkInterface)
                     .add(JSON_ABSTRACT, checkAbstract)
                     .add(JSON_VARIABLES, makeJsonVariableArray(variables))
@@ -143,7 +161,7 @@ public class FileManager implements AppFileComponent {
 
         // THEN PUT IT ALL TOGETHER IN A JsonObject
         JsonObject dataManagerJSO = Json.createObjectBuilder()
-                .add(JSON_UML_DIAGRAMS, umlArray)
+                .add(JSON_UML_DIAGRAM, umlArray)
                 .build();
 
         // AND NOW OUTPUT IT TO A JSON FILE WITH PRETTY PRINTING
@@ -151,7 +169,8 @@ public class FileManager implements AppFileComponent {
         properties.put(JsonGenerator.PRETTY_PRINTING, true);
         JsonWriterFactory writerFactory = Json.createWriterFactory(properties);
         StringWriter sw = new StringWriter();
-        try (JsonWriter jsonWriter = writerFactory.createWriter(sw)) {
+        try (JsonWriter jsonWriter = writerFactory.createWriter(sw)) 
+        {
             jsonWriter.writeObject(dataManagerJSO);
         }
 
@@ -160,12 +179,14 @@ public class FileManager implements AppFileComponent {
         JsonWriter jsonFileWriter = Json.createWriter(os);
         jsonFileWriter.writeObject(dataManagerJSO);
         String prettyPrinted = sw.toString();
-        try (PrintWriter pw = new PrintWriter(filePath)) {
+        try (PrintWriter pw = new PrintWriter(filePath)) 
+        {
             pw.write(prettyPrinted);
         }
     }
 
-    private JsonArray makeJsonVariableArray(ArrayList<Variables> variables) {
+    private JsonArray makeJsonVariableArray(ArrayList<Variables> variables) 
+    {
         JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
         variables.stream().map((variable) -> {
             String str = "no";
@@ -174,7 +195,7 @@ public class FileManager implements AppFileComponent {
             }
             JsonObject varJson = Json.createObjectBuilder()
                     .add(JSON_VARIABLE_NAME, variable.getName())
-                    .add(JSON_RETURN_TYPE, variable.getVal())
+                    .add(JSON_RET_TYPE, variable.getVal())
                     .add(JSON_ACCESS, variable.getAccess())
                     .add(JSON_STATIC, str)
                     .build();
@@ -186,20 +207,23 @@ public class FileManager implements AppFileComponent {
         return jA;
     }
 
-    private JsonArray makeJsonMethodsArray(ArrayList<Methods> methods) {
+    private JsonArray makeJsonMethodsArray(ArrayList<Methods> methods) 
+    {
         JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
         methods.stream().map((method) -> {
             String str = "no";
             String str1 = "no";
-            if (method.getIsStatic()) {
+            if (method.getIsStatic()) 
+            {
                 str = "yes";
             }
-            if (method.getAbstract()) {
+            if (method.getAbstract()) 
+            {
                 str1 = "yes";
             }
             JsonObject methodJson = Json.createObjectBuilder()
                     .add(JSON_METHOD_NAME, method.getName())
-                    .add(JSON_RETURN_TYPE, method.getType())
+                    .add(JSON_RET_TYPE, method.getType())
                     .add(JSON_ACCESS, method.getAccess())
                     .add(JSON_STATIC, str)
                     .add(JSON_ABSTRACT, str1)
@@ -213,15 +237,17 @@ public class FileManager implements AppFileComponent {
         return jA;
     }
 
-    private JsonArray makeJsonMethodArgsArray(TreeMap<String, String> args) {
+    private JsonArray makeJsonMethodArgsArray(TreeMap<String, String> args) 
+    {
         JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
-        for (Map.Entry<String, String> entry : args.entrySet()) {
+        for (Map.Entry<String, String> entry : args.entrySet())
+        {
             String key = entry.getKey();
             String value = entry.getValue();
 
             JsonObject argJson = Json.createObjectBuilder()
-                    .add(JSON_METHOD_ARG_NAME, key)
-                    .add(JSON_METHOD_ARG_TYPE, value)
+                    .add(JSON_METH_ARG_NAME, key)
+                    .add(JSON_METH_ARG_TYPE, value)
                     .build();
             arrayBuilder.add(argJson);
         }
@@ -243,17 +269,19 @@ public class FileManager implements AppFileComponent {
      * the file.
      */
     @Override
-    public void loadData(AppDataComponent data, String filePath) throws IOException {
+    public void loadData(AppDataComponent data, String filePath) throws IOException 
+    {
         DataManager dataManager = (DataManager) data;
         dataManager.reset();
 
         JsonObject json = loadJSONFile(filePath);
 
-        JsonArray nodesJsonArray = json.getJsonArray(JSON_UML_DIAGRAMS);
+        JsonArray nodesJsonArray = json.getJsonArray(JSON_UML_DIAGRAM);
         loadInfo(nodesJsonArray, dataManager);
     }
 
-    private JsonObject loadJSONFile(String jsonFilePath) throws IOException {
+    private JsonObject loadJSONFile(String jsonFilePath) throws IOException 
+    {
         InputStream is = new FileInputStream(jsonFilePath);
         JsonReader jsonReader = Json.createReader(is);
         JsonObject json = jsonReader.readObject();
@@ -262,24 +290,32 @@ public class FileManager implements AppFileComponent {
         return json;
     }
 
-    private void loadInfo(JsonArray nodesJsonArray, DataManager dataManager) {
+    private void loadInfo(JsonArray nodesJsonArray, DataManager dataManager) 
+    {
         ArrayList<Node> nodes = dataManager.getNodes();
-        for (int i = 0; i < nodesJsonArray.size(); i++) {
+        for (int i = 0; i < nodesJsonArray.size(); i++) 
+        {
             JsonObject nodeJso = nodesJsonArray.getJsonObject(i);
             Rectangles umlclass = new Rectangles();
             umlclass.setClassName(nodeJso.getString(JSON_CLASS_NAME));
             umlclass.setPackageName(nodeJso.getString(JSON_PACKAGE_NAME));
-            umlclass.getParents().add(new Rectangles(new Label(nodeJso.getString(JSON_PARENT_NAME)), ""));
+            umlclass.getParents().add(new Rectangles(new Label(nodeJso.getString(JSON_PARENTS)), ""));
 
-            if (nodeJso.getString(JSON_INTERFACE).equals("yes")) {
+            if (nodeJso.getString(JSON_INTERFACE).equals("yes")) 
+            {
                 umlclass.setIsInterface(true);
-            } else {
+            } 
+            else 
+            {
                 umlclass.setIsInterface(false);
             }
 
-            if (nodeJso.getString(JSON_ABSTRACT).equals("yes")) {
+            if (nodeJso.getString(JSON_ABSTRACT).equals("yes")) 
+            {
                 umlclass.setAbstract(true);
-            } else {
+            } 
+            else 
+            {
                 umlclass.setAbstract(false);
             }
 
@@ -295,16 +331,21 @@ public class FileManager implements AppFileComponent {
         }
     }
 
-    private void loadVariables(ArrayList<Variables> list, JsonArray variablesJA) {
-        for (int i = 0; i < variablesJA.size(); i++) {
+    private void loadVariables(ArrayList<Variables> list, JsonArray variablesJA) 
+    {
+        for (int i = 0; i < variablesJA.size(); i++) 
+        {
             JsonObject varJso = variablesJA.getJsonObject(i);
             String varName = varJso.getString(JSON_VARIABLE_NAME);
-            String returnType = varJso.getString(JSON_RETURN_TYPE);
+            String returnType = varJso.getString(JSON_RET_TYPE);
             String access = varJso.getString(JSON_ACCESS);
             boolean isStatic = false;
-            if (varJso.getString(JSON_STATIC).equals("yes")) {
+            if (varJso.getString(JSON_STATIC).equals("yes")) 
+            {
                 isStatic = true;
-            } else if (varJso.getString(JSON_STATIC).equals("no")) {
+            } 
+            else if (varJso.getString(JSON_STATIC).equals("no")) 
+            {
                 isStatic = false;
             }
             Variables var = new Variables(varName, returnType, access, isStatic);
@@ -312,32 +353,41 @@ public class FileManager implements AppFileComponent {
         }
     }
 
-    private void loadMethods(ArrayList<Methods> list, JsonArray methodsJA) {
-        for (int i = 0; i < methodsJA.size(); i++) {
+    private void loadMethods(ArrayList<Methods> list, JsonArray methodsJA) 
+    {
+        for (int i = 0; i < methodsJA.size(); i++) 
+        {
             JsonObject methodJso = methodsJA.getJsonObject(i);
             String methodName = methodJso.getString(JSON_METHOD_NAME);
-            String returnType = methodJso.getString(JSON_RETURN_TYPE);
+            String returnType = methodJso.getString(JSON_RET_TYPE);
             String access = methodJso.getString(JSON_ACCESS);
             boolean isStatic = false;
             boolean isAbstract = false;
-            if (methodJso.getString(JSON_STATIC).equals("yes")) {
+            if (methodJso.getString(JSON_STATIC).equals("yes")) 
+            {
                 isStatic = true;
-            } else if (methodJso.getString(JSON_STATIC).equals("no")) {
+            } 
+            else if (methodJso.getString(JSON_STATIC).equals("no")) 
+            {
                 isStatic = false;
             }
-            if (methodJso.getString(JSON_ABSTRACT).equals("yes")) {
+            if (methodJso.getString(JSON_ABSTRACT).equals("yes")) 
+            {
                 isAbstract = true;
-            } else if (methodJso.getString(JSON_ABSTRACT).equals("no")) {
+            } 
+            else if (methodJso.getString(JSON_ABSTRACT).equals("no")) 
+            {
                 isAbstract = false;
             }
 
             Methods method = new Methods(methodName, returnType, access, isStatic, isAbstract);
 
             JsonArray argJA = methodJso.getJsonArray(JSON_METHOD_ARGS);
-            for (int j = 0; j < argJA.size(); j++) {
+            for (int j = 0; j < argJA.size(); j++) 
+            {
                 JsonObject argJso = argJA.getJsonObject(j);
-                String argName = argJso.getString(JSON_METHOD_ARG_NAME);
-                String argType = argJso.getString(JSON_METHOD_ARG_TYPE);
+                String argName = argJso.getString(JSON_METH_ARG_NAME);
+                String argType = argJso.getString(JSON_METH_ARG_TYPE);
                 method.getArgs().put(argName, argType);
             }
 
@@ -358,29 +408,38 @@ public class FileManager implements AppFileComponent {
      * the file.
      */
     @Override
-    public void exportData(AppDataComponent data, String filePath) throws IOException {
-        try {
+    public void exportData(AppDataComponent data, String filePath) throws IOException 
+    {
+        try 
+        {
             DataManager dataManager = (DataManager) data;
-            for (Node node : dataManager.getNodes()) {
+            for (Node node : dataManager.getNodes()) 
+            {
                 Rectangles umlClass = (Rectangles) node;
                 String packageName = umlClass.getPackageName();
                 String tmp = "";
-                if (packageName.indexOf(".") > 0) {
+                if (packageName.indexOf(".") > 0) 
+                {
                     String[] strs = packageName.split("\\.");
                     tmp = filePath + "/" + strs[0] + "/";
 
-                    for (int i = 1; i < strs.length - 1; i++) {
+                    for (int i = 1; i < strs.length - 1; i++) 
+                    {
                         tmp += strs[i];
                     }
-                    if (strs.length > 0) {
+                    if (strs.length > 0) 
+                    {
                         tmp += strs[strs.length - 1];
                     }
-                } else {
+                } 
+                else 
+                {
                     tmp = filePath + "/" + umlClass.getPackageName();
                 }
 
                 File dir = new File(tmp);
-                if (!dir.exists()) {
+                if (!dir.exists()) 
+                {
                     dir.mkdir();
                 }
                 File javaFile = new File(dir + "/" + umlClass.getClassName() + ".java");
@@ -389,27 +448,34 @@ public class FileManager implements AppFileComponent {
                 fillArrayListWithData(umlClass, list);
 
                 FileWriter fWriter = new FileWriter(javaFile.getPath());
-                try (BufferedWriter writer = new BufferedWriter(fWriter)) {
-                    for (String value : list) {
+                try (BufferedWriter writer = new BufferedWriter(fWriter)) 
+                {
+                    for (String value : list) 
+                    {
                         writer.write(value);
                         writer.newLine();
                     }
                 }
             }
-        } catch (FileNotFoundException e) {
+        } 
+        catch (FileNotFoundException e) 
+        {
             // NOTHING
         }
     }
 
-    private void fillArrayListWithData(Rectangles umlClass, ArrayList<String> list) {
+    private void fillArrayListWithData(Rectangles umlClass, ArrayList<String> list) 
+    {
         String packageLine = "package " + umlClass.getPackageName() + ";";
         list.add(packageLine);
 
         String classTitle = "public ";
-        if (umlClass.getIsAbstract()) {
+        if (umlClass.getIsAbstract()) 
+        {
             classTitle += "abstract ";
         }
-        if (umlClass.getIsInterface()) {
+        if (umlClass.getIsInterface()) 
+        {
             classTitle += "interface ";
         }
 
@@ -418,21 +484,32 @@ public class FileManager implements AppFileComponent {
         ArrayList<Rectangles> parents = umlClass.getParents();
         boolean printed = false;
         Iterator iter = parents.iterator();
-        while (iter.hasNext()) {
+        while (iter.hasNext()) 
+        {
             Rectangles parentClass = (Rectangles) iter.next();
 
-            if (!printed) {
-                if (parentClass.getIsInterface()) {
+            if (!printed) 
+            {
+                if (parentClass.getIsInterface()) 
+                {
                     classTitle += "implements " + parentClass.getClassName() + ", ";
-                } else {
+                } 
+                else 
+                {
                     classTitle += "extends " + parentClass.getClassName() + " ";
                 }
                 printed = true;
-            } else {
-                if (parentClass.getIsInterface()) {
-                    if (!iter.hasNext()) {
+            } 
+            else 
+            {
+                if (parentClass.getIsInterface()) 
+                {
+                    if (!iter.hasNext())
+                    {
                         classTitle += parentClass.getClassName();
-                    } else {
+                    } 
+                    else 
+                    {
                         classTitle += parentClass.getClassName() + ", ";
                     }
                 }
@@ -447,27 +524,32 @@ public class FileManager implements AppFileComponent {
         list.add("}");
     }
 
-    private void addVariables(Rectangles umlClass, ArrayList<String> list) {
+    private void addVariables(Rectangles umlClass, ArrayList<String> list) 
+    {
         ArrayList<Variables> variables = umlClass.getVariables();
         String varAccess = "";
         String varIsStatic = "";
         String varIsFinal = "";
         String varType = "";
         String varName = "";
-        for (Variables variable : variables) {
+        for (Variables variable : variables) 
+        {
             String varLine = "";
             varAccess = variable.getAccess();
-            if (variable.getStatic()) {
+            if (variable.getStatic()) 
+            {
                 varIsStatic = "static";
             }
             varName = variable.getName();
-            if (isAllUpperCase(varName)) {
+            if (isAllUpperCase(varName)) 
+            {
                 varIsFinal = "final";
             }
             varType = variable.getVal();
 
             varLine += varAccess + " ";
-            if (varIsStatic.equals("static")) {
+            if (varIsStatic.equals("static")) 
+            {
                 varLine += varIsStatic + " ";
             }
             if (varIsFinal.equals("final"));
@@ -478,7 +560,8 @@ public class FileManager implements AppFileComponent {
         }
     }
 
-    private void addMethods(Rectangles umlClass, ArrayList<String> list) {
+    private void addMethods(Rectangles umlClass, ArrayList<String> list) 
+    {
         ArrayList<Methods> methods = umlClass.getMethods();
         String methodAccess = "";
         String methodAbstract = "";
@@ -487,38 +570,48 @@ public class FileManager implements AppFileComponent {
         String methodStatic = "";
         TreeMap<String, String> methodArgs;
 
-        for (Methods method : methods) {
+        for (Methods method : methods) 
+        {
             String methodLine = "";
             methodAccess = method.getAccess();
             methodType = method.getType();
             methodName = method.getName();
-            if (method.getAbstract()) {
+            if (method.getAbstract()) 
+            {
                 methodAbstract = "abstract";
             }
-            if (method.getIsStatic()) {
+            if (method.getIsStatic()) 
+            {
                 methodStatic = "static";
             }
             methodArgs = method.getArgs();
 
             methodLine += methodAccess;
-            if (methodAbstract.equals("abstract")) {
+            if (methodAbstract.equals("abstract")) 
+            {
                 methodLine += " " + methodAbstract;
             }
-            if (methodStatic.equals("static")) {
+            if (methodStatic.equals("static")) 
+            {
                 methodLine += " " + methodStatic;
             }
 
             methodLine += " " + methodType + " " + methodName + "(";
 
-            if (!methodArgs.isEmpty()) {
+            if (!methodArgs.isEmpty()) 
+            {
                 Iterator iter = methodArgs.entrySet().iterator();
-                while (iter.hasNext()) {
+                while (iter.hasNext()) 
+                {
                     Map.Entry entry = (Map.Entry) iter.next();
                     String key = (String) entry.getKey();
                     String value = (String) entry.getValue();
-                    if (!iter.hasNext()) {
+                    if (!iter.hasNext()) 
+                    {
                         methodLine += value + " " + key;
-                    } else {
+                    }
+                    else 
+                    {
                         methodLine += value + " " + key + ", ";
                     }
                 }
@@ -529,10 +622,13 @@ public class FileManager implements AppFileComponent {
         }
     }
 
-    private boolean isAllUpperCase(String str) {
-        for (int i = 0; i < str.length(); i++) {
+    private boolean isAllUpperCase(String str)
+    {
+        for (int i = 0; i < str.length(); i++) 
+        {
             char c = str.charAt(i);
-            if (c >= 97 && c <= 122) {
+            if (c >= 97 && c <= 122) 
+            {
                 return false;
             }
         }
@@ -544,6 +640,7 @@ public class FileManager implements AppFileComponent {
      * this application.
      */
     @Override
-    public void importData(AppDataComponent data, String filePath) throws IOException {
+    public void importData(AppDataComponent data, String filePath) throws IOException 
+    {
     }
 }

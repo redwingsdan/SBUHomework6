@@ -238,21 +238,21 @@ public class Workspace extends AppWorkspaceComponent {
         gui.getAddClassButton().setOnAction(e -> {
             gui.setSelectButtonSelected(false);
             gui.getSelectButton().setDisable(gui.getSelectButtonSelected());
-            pageEditController.handleAddClassRequest();
+            pageEditController.addClassRequestHandler();
         });
 
         gui.getSelectButton().setOnAction(e -> {
             gui.setSelectButtonSelected(true);
             gui.getSelectButton().setDisable(gui.getSelectButtonSelected());
-            pageEditController.handleSelectRequest();
+            pageEditController.selectRequestHandler();
         });
 
         classNameTextField.textProperty().addListener((x, y, z) -> {
-            pageEditController.handleClassName(classNameTextField.getText());
+            pageEditController.classNameHandler(classNameTextField.getText());
         });
 
         packageNameTextField.textProperty().addListener((x, y, z) -> {
-            pageEditController.handlePackageName(packageNameTextField.getText());
+            pageEditController.packageNameHandler(packageNameTextField.getText());
         });
         
         gui.getCodeButton().setOnAction(e -> {
@@ -333,11 +333,11 @@ public class Workspace extends AppWorkspaceComponent {
         try {
             innerPane.getChildren().clear();
             gui.getPrimaryScene().setCursor(Cursor.DEFAULT);
-
+            
             DataManager dataManager = (DataManager) app.getDataComponent();
             ArrayList<Node> nodes = dataManager.getNodes();
             if (!nodes.isEmpty()) {
-                pageEditController.setIsClassAdding(true);
+                pageEditController.setClassAdding(true);
                 nodes.stream().map((node) -> (Rectangles) node).map((umlclass) -> {
                     pageEditController.getClasses().add(umlclass);
                     return umlclass;
@@ -345,13 +345,17 @@ public class Workspace extends AppWorkspaceComponent {
                     umlclass.setSelected(false);
                     return umlclass;
                 }).map((umlclass) -> {
-                    pageEditController.handleDragRequest(umlclass);
+                    pageEditController.dragRequestHandler(umlclass);
                     return umlclass;
                 }).forEach((umlclass) -> {
                     innerPane.getChildren().add(umlclass);
                 });
             }
-
+            if(nodes.isEmpty())
+            {
+                gui.getSelectButton().setDisable(true);
+            }
+            System.out.println(nodes.size());
             Iterator iter = innerPane.getChildren().iterator();
             while (iter.hasNext()) {
                 Object obj = iter.next();

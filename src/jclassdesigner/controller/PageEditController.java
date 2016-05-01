@@ -15,130 +15,132 @@ import javafx.scene.layout.Pane;
 /**
  * @author Daniel Peterson
  */
-public class PageEditController {
+public class PageEditController 
+{
 
-    static final String DEFAULT_CLASS_NAME = "Insert_Class_Name";
-    static final String DEFAULT_PACKAGE_NAME = "Insert_Package_Name";
+    static final String DEF_CLASS_NAME = "Insert_Class_Name";
+    static final String DEF_PACKAGE_NAME = "Insert_Package_Name";
     static final String DUPLICATE_TITLE = "Warning";
     static final String DUPLICATE_CLASS_MESSAGE = "There are currently two classes with the same name in the same package";
 
-    AppTemplate app;
-
-    AppGUI gui;
-
-    boolean selecting;
-    boolean isClassAdding;
-
     ArrayList<Rectangles> classes;
-    double posX;
-    double posY;
+    AppTemplate app;
+    AppGUI gui;
+    boolean selecting;
+    boolean classAdding;
+    double xPos;
+    double yPos;
     double startX;
     double startY;
     
-    public PageEditController(AppTemplate initApp) {
+    public PageEditController(AppTemplate initApp) 
+    {
+        classes = new ArrayList<>();
         app = initApp;
         gui = app.getGUI();
-        selecting = false;
-        classes = new ArrayList<>();
+        selecting = false;        
     }
 
-    public ArrayList<Rectangles> getClasses() {
+    public ArrayList<Rectangles> getClasses() 
+    {
         return classes;
     }
 
-    public void setIsClassAdding(boolean adding) {
-        isClassAdding = adding;
+    public void setClassAdding(boolean adding) 
+    {
+        classAdding = adding;
     }
 
-    public void handleAddClassRequest() {
-        DataManager dataManager = (DataManager) app.getDataComponent();
-
+    public void addClassRequestHandler() 
+    {
+        classAdding = true;
         gui.getPrimaryScene().setCursor(Cursor.DEFAULT);
         gui.getSelectButton().setDisable(false);
-
+        
+        DataManager dataManager = (DataManager) app.getDataComponent();
         Workspace workspace = (Workspace) app.getWorkspaceComponent();
         workspace.reloadWorkspace();
-        workspace.getClassNameTextField().clear();
         workspace.getPackageNameTextField().clear();
-        workspace.getClassNameTextField().setText(DEFAULT_CLASS_NAME);
-        workspace.getPackageNameTextField().setText(DEFAULT_PACKAGE_NAME);
-
-        isClassAdding = true;
-
-        Label className = new Label(DEFAULT_CLASS_NAME);
-        Rectangles umlclass = new Rectangles(className, DEFAULT_PACKAGE_NAME);
-        umlclass.setSelected(true);
-        umlclass.setStyle("-fx-border-color: yellow;" + "-fx-border-width: 5px");
-        classes.add(umlclass);
-
-        workspace.getParentNameComboBox().getItems().addAll(DEFAULT_CLASS_NAME);
-
-        dataManager.getNodes().add(umlclass);
-        workspace.getInnerPane().getChildren().add(umlclass);
-
-        handleDragRequest((Rectangles) umlclass);
+        workspace.getClassNameTextField().clear(); 
+        workspace.getPackageNameTextField().setText(DEF_PACKAGE_NAME);
+        workspace.getClassNameTextField().setText(DEF_CLASS_NAME);
+        
+        Label className = new Label(DEF_CLASS_NAME);
+        Rectangles classRect = new Rectangles(className, DEF_PACKAGE_NAME);
+        classRect.setStyle("-fx-border-width: 5px;" + "-fx-border-color: yellow;");
+        classRect.setSelected(true);
+        classes.add(classRect);
+        
+        workspace.getParentNameComboBox().getItems().addAll(DEF_CLASS_NAME);
+        dataManager.getNodes().add(classRect);
+        workspace.getInnerPane().getChildren().add(classRect);
+        dragRequestHandler((Rectangles) classRect);
     }
 
-    public void handleSelectRequest() {
-        gui.getSelectButton().setDisable(true);
+    public void selectRequestHandler() 
+    {
+        classAdding = false;
+        gui.getSelectButton().setDisable(false);
+        
         Scene scene = gui.getPrimaryScene();
         scene.setCursor(Cursor.DEFAULT);
-
         Workspace workspace = (Workspace) app.getWorkspaceComponent();
         workspace.reloadWorkspace();
-        isClassAdding = false;
     }
 
-    public void handleDragRequest(Pane box) {
+    public void dragRequestHandler(Pane box) 
+    {
         Workspace workspace = (Workspace) app.getWorkspaceComponent();
-        Rectangles theBox = (Rectangles) box;
-        theBox.setOnMousePressed(pressed -> {
-            if (!isClassAdding) {
+        Rectangles classBox = (Rectangles) box;
+        
+        classBox.setOnMousePressed(pressed -> {
+            if (!classAdding) 
+            {
+                //classAdding = false;
                 workspace.reloadWorkspace();
-                isClassAdding = false;
-                classes.stream().filter((myClass) -> ((Pane) myClass == theBox)).map((myClass) -> {
-                    myClass.setSelected(true);
-                    return myClass;
-                }).map((myClass) -> {
-                    myClass.setStyle("-fx-border-color: yellow;" + "-fx-border-width: 5px");
-                    return myClass;
-                }).map((myClass) -> {
-                    workspace.getClassNameTextField().setText(myClass.getClassName());
-                    return myClass;
-                }).forEach((myClass) -> {
-                    workspace.getPackageNameTextField().setText(myClass.getPackageName());
+                classes.stream().filter((movableClass) -> ((Pane) movableClass == classBox)).map((movableClass) -> {
+                    movableClass.setSelected(true);
+                    return movableClass;
+                }).map((movableClass) -> {
+                    movableClass.setStyle("-fx-border-width: 5px;" + "-fx-border-color: yellow;");
+                    return movableClass;
+                }).map((movableClass) -> {
+                    workspace.getClassNameTextField().setText(movableClass.getClassName());
+                    return movableClass;
+                }).forEach((movableClass) -> {
+                    workspace.getPackageNameTextField().setText(movableClass.getPackageName());
                 });
             }
 
-            classes.stream().filter((myClass) -> ((Pane) myClass == theBox)).filter((myClass) -> (gui.getPrimaryScene().getCursor().toString().equals("DEFAULT") && myClass.isSelected())).map((myClass) -> {
-                myClass.setStyle("-fx-border-color: yellow;" + "-fx-border-width: 5px");
-                return myClass;
+            classes.stream().filter((movableClass) -> ((Pane) movableClass == classBox)).filter((movableClass) -> (gui.getPrimaryScene().getCursor().toString().equals("DEFAULT") && movableClass.isSelected())).map((movableClass) -> {
+                movableClass.setStyle("-fx-border-width: 5px;" + "-fx-border-color: yellow;");
+                return movableClass;
             }).map((e) -> {
-                posX = pressed.getSceneX();
+                xPos = pressed.getSceneX();
                 return e;
             }).map((e) -> {
-                posY = pressed.getSceneY();
+                yPos = pressed.getSceneY();
                 return e;
             }).map((e) -> {
-                startX = theBox.getLayoutX();
+                startX = classBox.getLayoutX();
                 return e;
             }).forEach((e) -> {
-                startY = theBox.getLayoutY();
+                startY = classBox.getLayoutY();
             });
         });
 
-        theBox.setOnMouseDragged(dragged -> {
-            classes.stream().filter((myClass) -> ((Pane) myClass == theBox)).filter((myClass) -> (gui.getPrimaryScene().getCursor().toString().equals("DEFAULT") && myClass.isSelected())).map((_item) -> dragged.getSceneX() - posX).map((diffX) -> {
-                double diffY = dragged.getSceneY() - posY;
+        classBox.setOnMouseDragged(dragged -> {
+            classes.stream().filter((movableClass) -> ((Pane) movableClass == classBox)).filter((movableClass) -> (gui.getPrimaryScene().getCursor().toString().equals("DEFAULT") && movableClass.isSelected())).map((_item) -> dragged.getSceneX() - xPos).map((diffX) -> {
+                double diffY = dragged.getSceneY() - yPos;
                 startX += diffX;
                 startY += diffY;
                 return diffX;
             }).map((e) -> startX).map((scaledX) -> {
                 double scaledY = startY;
-                posX = dragged.getSceneX();
-                posY = dragged.getSceneY();
-                theBox.setLayoutX(scaledX);
-                theBox.setLayoutY(scaledY);
+                xPos = dragged.getSceneX();
+                yPos = dragged.getSceneY();
+                classBox.setLayoutX(scaledX);
+                classBox.setLayoutY(scaledY);
                 return scaledX;
             }).forEach((e) -> {
                 dragged.consume();
@@ -146,30 +148,43 @@ public class PageEditController {
         });
     }
 
-    public void handleClassName(String classNameText) {
-        classes.stream().filter((myClass) -> (myClass.isSelected())).filter((myClass) -> (!checkClassDuplicateClassUpdate(myClass, classNameText))).forEach((myClass) -> {
-            myClass.setClassName(classNameText);
+    public void classNameHandler(String classNameText) 
+    {
+        classes.stream().filter((movableClass) -> (movableClass.isSelected())).filter((movableClass) -> (!isClassSame(movableClass, classNameText))).forEach((movableClass) -> {
+            movableClass.setClassName(classNameText);
         });
     }
 
-    public void handlePackageName(String packageNameText) {
-        classes.stream().filter((myClass) -> (myClass.isSelected())).filter((myClass) -> (!checkClassDuplicatePackageUpdate(myClass, packageNameText))).forEach((myClass) -> {
-            myClass.setPackageName(packageNameText);
+    public void packageNameHandler(String packageNameText) 
+    {
+        classes.stream().filter((movableClass) -> (movableClass.isSelected())).filter((movableClass) -> (!isPackageSame(movableClass, packageNameText))).forEach((movableClass) -> {
+            movableClass.setPackageName(packageNameText);
         });
     }
 
-    public boolean checkClassDuplicateClassUpdate(Rectangles umlclass, String className) {
-        for (Rectangles myClass : classes) {
-            if (myClass != umlclass) {
-                if (className.equals(myClass.getClassName())) {
-                    if (myClass.getPackageName().equals(umlclass.getPackageName())) {
-                        if (myClass.getPackageName().equals(DEFAULT_PACKAGE_NAME)) {
-                            if (myClass.getClassName().equals(DEFAULT_CLASS_NAME)) {
-                            } else {
+    public boolean isClassSame(Rectangles classRect, String className) 
+    {
+        for (Rectangles movableClass : classes) 
+        {
+            if (movableClass != classRect) 
+            {
+                if (className.equals(movableClass.getClassName())) 
+                {
+                    if (movableClass.getPackageName().equals(classRect.getPackageName())) 
+                    {
+                        if (movableClass.getPackageName().equals(DEF_PACKAGE_NAME)) 
+                        {
+                            if (movableClass.getClassName().equals(DEF_CLASS_NAME)) 
+                            {
+                            } 
+                            else 
+                            {
                                 AppMessageDialogSingleton.getSingleton().show(DUPLICATE_TITLE, DUPLICATE_CLASS_MESSAGE);
                                 return true;
                             }
-                        } else {
+                        } 
+                        else 
+                        {
                             AppMessageDialogSingleton.getSingleton().show(DUPLICATE_TITLE, DUPLICATE_CLASS_MESSAGE);
                             return true;
                         }
@@ -180,18 +195,29 @@ public class PageEditController {
         return false;
     }
 
-    public boolean checkClassDuplicatePackageUpdate(Rectangles umlclass, String packageName) {
-        for (Rectangles myClass : classes) {
-            if (myClass != umlclass) {
-                if (packageName.equals(myClass.getPackageName())) {
-                    if (myClass.getClassName().equals(umlclass.getClassName())) {
-                        if (myClass.getPackageName().equals(DEFAULT_PACKAGE_NAME)) {
-                            if (myClass.getClassName().equals(DEFAULT_CLASS_NAME)) {
-                            } else {
+    public boolean isPackageSame(Rectangles classRect, String packageName) 
+    {
+        for (Rectangles movableClass : classes) 
+        {
+            if (movableClass != classRect) 
+            {
+                if (packageName.equals(movableClass.getPackageName())) 
+                {
+                    if (movableClass.getClassName().equals(classRect.getClassName())) 
+                    {
+                        if (movableClass.getPackageName().equals(DEF_PACKAGE_NAME)) 
+                        {
+                            if (movableClass.getClassName().equals(DEF_CLASS_NAME)) 
+                            {
+                            } 
+                            else 
+                            {
                                 AppMessageDialogSingleton.getSingleton().show(DUPLICATE_TITLE, DUPLICATE_CLASS_MESSAGE);
                                 return true;
                             }
-                        } else {
+                        } 
+                        else 
+                        {
                             AppMessageDialogSingleton.getSingleton().show(DUPLICATE_TITLE, DUPLICATE_CLASS_MESSAGE);
                             return true;
                         }

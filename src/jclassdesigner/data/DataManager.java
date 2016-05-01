@@ -1,10 +1,10 @@
 package jclassdesigner.data;
 
-import java.util.ArrayList;
-import javafx.scene.Node;
-import jclassdesigner.gui.Workspace;
 import saf.AppTemplate;
 import saf.components.AppDataComponent;
+import jclassdesigner.gui.Workspace;
+import java.util.ArrayList;
+import javafx.scene.Node;
 
 /**
  * This class serves as the data management component for this application.
@@ -13,11 +13,11 @@ import saf.components.AppDataComponent;
  * @author Daniel Peterson
  * @version 1.0
  */
-public class DataManager implements AppDataComponent {
+public class DataManager implements AppDataComponent 
+{
 
     // THIS IS A SHARED REFERENCE TO THE APPLICATION
     AppTemplate app;
-
     ArrayList<Node> nodes;
 
     /**
@@ -27,22 +27,25 @@ public class DataManager implements AppDataComponent {
      * @param initApp The application within which this data manager is serving.
      * @throws java.lang.Exception
      */
-    public DataManager(AppTemplate initApp) throws Exception {
+    public DataManager(AppTemplate initApp) throws Exception 
+    {
         // KEEP THE APP FOR LATER
         app = initApp;
-
         nodes = new ArrayList<>();
     }
 
-    public DataManager() {
+    public DataManager() 
+    {
         nodes = new ArrayList<>();
     }
 
-    public void setNodes(ArrayList<Node> nodes) {
+    public void setNodes(ArrayList<Node> nodes) 
+    {
         this.nodes = nodes;
     }
 
-    public ArrayList<Node> getNodes() {
+    public ArrayList<Node> getNodes() 
+    {
         return nodes;
     }
 
@@ -52,9 +55,11 @@ public class DataManager implements AppDataComponent {
      * page.
      */
     @Override
-    public void reset() {
+    public void reset() 
+    {
         nodes.clear();
-        if (app != null) {
+        if (app != null) 
+        {
             Workspace workspace = (Workspace) app.getWorkspaceComponent();
             workspace.getInnerPane().getChildren().clear();
             workspace.getPageEditController().getClasses().clear();
