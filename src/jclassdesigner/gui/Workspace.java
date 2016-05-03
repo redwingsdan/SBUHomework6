@@ -355,6 +355,10 @@ public class Workspace extends AppWorkspaceComponent {
             {
                 gui.getSelectButton().setDisable(true);
             }
+            else
+            {
+               gui.getSelectButton().setDisable(false); 
+            }
             System.out.println(nodes.size());
             Iterator iter = innerPane.getChildren().iterator();
             while (iter.hasNext()) {
