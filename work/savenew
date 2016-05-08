@@ -1,0 +1,44 @@
+
+{
+    "UML Diagram":[
+        {
+            "Class Name":"Insert_Class_Name6",
+            "Package Name":"Insert_Package_Name",
+            "Parents":"",
+            "Is Interface":"no",
+            "Is Abstract":"no",
+            "Variables":[
+            ],
+            "Methods":[
+            ],
+            "LayoutX":"599.0",
+            "LayoutY":"210.0"
+        },
+        {
+            "Class Name":"Insert_Class_Name2",
+            "Package Name":"Insert_Package_Name2",
+            "Parents":"",
+            "Is Interface":"yes",
+            "Is Abstract":"no",
+            "Variables":[
+            ],
+            "Methods":[
+            ],
+            "LayoutX":"379.0",
+            "LayoutY":"104.0"
+        },
+        {
+            "Class Name":"Insert_Class_Name1",
+            "Package Name":"Insert_Package_Name",
+            "Parents":"",
+            "Is Interface":"no",
+            "Is Abstract":"no",
+            "Variables":[
+            ],
+            "Methods":[
+            ],
+            "LayoutX":"649.0",
+            "LayoutY":"83.0"
+        }
+    ]
+}

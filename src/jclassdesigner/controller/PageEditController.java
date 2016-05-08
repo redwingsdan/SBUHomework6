@@ -75,6 +75,37 @@ public class PageEditController
         dataManager.getNodes().add(classRect);
         workspace.getInnerPane().getChildren().add(classRect);
         dragRequestHandler((Rectangles) classRect);
+        
+        workspace.reloadWorkspace();
+    }
+    
+    public void addInterfaceRequestHandler() 
+    {
+        classAdding = true;
+        gui.getPrimaryScene().setCursor(Cursor.DEFAULT);
+        gui.getSelectButton().setDisable(false);
+        
+        DataManager dataManager = (DataManager) app.getDataComponent();
+        Workspace workspace = (Workspace) app.getWorkspaceComponent();
+        workspace.reloadWorkspace();
+        workspace.getPackageNameTextField().clear();
+        workspace.getClassNameTextField().clear(); 
+        workspace.getPackageNameTextField().setText(DEF_PACKAGE_NAME);
+        workspace.getClassNameTextField().setText(DEF_CLASS_NAME);
+        
+        Label className = new Label(DEF_CLASS_NAME);
+        Rectangles classRect = new Rectangles(className, DEF_PACKAGE_NAME);
+        classRect.setStyle("-fx-border-width: 5px;" + "-fx-border-color: yellow;");
+        classRect.setSelected(true);
+        classRect.setIsInterface(true);
+        classes.add(classRect);
+        
+        workspace.getParentNameComboBox().getItems().addAll(DEF_CLASS_NAME);
+        dataManager.getNodes().add(classRect);
+        workspace.getInnerPane().getChildren().add(classRect);
+        dragRequestHandler((Rectangles) classRect);
+        
+        workspace.reloadWorkspace();
     }
 
     public void selectRequestHandler() 
@@ -84,8 +115,8 @@ public class PageEditController
         
         Scene scene = gui.getPrimaryScene();
         scene.setCursor(Cursor.DEFAULT);
-        Workspace workspace = (Workspace) app.getWorkspaceComponent();
-        workspace.reloadWorkspace();
+       // Workspace workspace = (Workspace) app.getWorkspaceComponent();
+      //  workspace.reloadWorkspace();
     }
 
     public void dragRequestHandler(Pane box) 
@@ -96,6 +127,7 @@ public class PageEditController
         classBox.setOnMousePressed(pressed -> {
             if (!classAdding) 
             {
+                //classes.stream().filter(movableClass)
                 //classAdding = false;
                 workspace.reloadWorkspace();
                 classes.stream().filter((movableClass) -> ((Pane) movableClass == classBox)).map((movableClass) -> {

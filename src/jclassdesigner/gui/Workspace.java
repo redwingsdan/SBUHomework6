@@ -3,6 +3,9 @@ package jclassdesigner.gui;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
+import javafx.event.Event;
+import javafx.event.EventHandler;
+import javafx.event.EventType;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
@@ -17,6 +20,8 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.DragEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -107,6 +112,7 @@ public class Workspace extends AppWorkspaceComponent {
     Text debugText;
 
     PageEditController pageEditController;
+    
 
     public Workspace(AppTemplate initApp) {
 
@@ -240,11 +246,25 @@ public class Workspace extends AppWorkspaceComponent {
             gui.getSelectButton().setDisable(gui.getSelectButtonSelected());
             pageEditController.addClassRequestHandler();
         });
+        
+        gui.getAddInterfaceButton().setOnAction(e -> {
+            gui.setSelectButtonSelected(false);
+            gui.getSelectButton().setDisable(gui.getSelectButtonSelected());
+            pageEditController.addInterfaceRequestHandler();
+        });
 
         gui.getSelectButton().setOnAction(e -> {
             gui.setSelectButtonSelected(true);
             gui.getSelectButton().setDisable(gui.getSelectButtonSelected());
             pageEditController.selectRequestHandler();
+        });
+        
+        gui.getRemoveButton().setOnAction(e -> {
+           DataManager dataManager = (DataManager) app.getDataComponent();
+           ArrayList<Node> nodes = dataManager.getNodes();
+           Rectangles r = (Rectangles) dataManager.getSelected();
+           nodes.remove(r);
+           reloadWorkspace();
         });
 
         classNameTextField.textProperty().addListener((x, y, z) -> {
@@ -254,6 +274,19 @@ public class Workspace extends AppWorkspaceComponent {
         packageNameTextField.textProperty().addListener((x, y, z) -> {
             pageEditController.packageNameHandler(packageNameTextField.getText());
         });
+ //       EventHandler handler = new EventHandler(<InputEvent>() {
+ //       public void handle(InputEvent event) {
+ //   }
+ //   });
+ //       addVariableButton.addEventHandler(MouseEvent.MOUSE_CLICKED, handler);
+        EventHandler handler = null;
+        handler = new EventHandler() {
+            @Override
+            public void handle(Event event) {
+                System.out.println("added variable");
+            }
+        };
+        addVariableButton.addEventHandler(MouseEvent.MOUSE_CLICKED, handler);
         
         gui.getCodeButton().setOnAction(e -> {
             FileManager fileManager = (FileManager) (app.getFileComponent());
@@ -354,12 +387,14 @@ public class Workspace extends AppWorkspaceComponent {
             if(nodes.isEmpty())
             {
                 gui.getSelectButton().setDisable(true);
+                gui.getRemoveButton().setDisable(true);
             }
             else
             {
                gui.getSelectButton().setDisable(false); 
+               gui.getRemoveButton().setDisable(false);
             }
-            System.out.println(nodes.size());
+           // System.out.println(nodes.size());
             Iterator iter = innerPane.getChildren().iterator();
             while (iter.hasNext()) {
                 Object obj = iter.next();

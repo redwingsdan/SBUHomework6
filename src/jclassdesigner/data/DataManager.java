@@ -19,7 +19,8 @@ public class DataManager implements AppDataComponent
     // THIS IS A SHARED REFERENCE TO THE APPLICATION
     AppTemplate app;
     ArrayList<Node> nodes;
-
+    Rectangles selected;
+    
     /**
      * This constructor creates the data manager and sets up the
      *
@@ -32,6 +33,7 @@ public class DataManager implements AppDataComponent
         // KEEP THE APP FOR LATER
         app = initApp;
         nodes = new ArrayList<>();
+        selected = null;
     }
 
     public DataManager() 
@@ -47,6 +49,19 @@ public class DataManager implements AppDataComponent
     public ArrayList<Node> getNodes() 
     {
         return nodes;
+    }
+    
+    public Node getSelected()
+    {
+        for(int i = 0; i<nodes.size(); i++)
+        {
+            Rectangles r = (Rectangles)nodes.get(i);
+            if(r.isSelected() == true)
+            {
+                selected = r;
+            }
+        }
+        return selected;
     }
 
     /**
