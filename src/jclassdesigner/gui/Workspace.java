@@ -310,7 +310,7 @@ public class Workspace extends AppWorkspaceComponent {
         bigPane.setRight(optionsPane);
         workspace.getChildren().add(bigPane);
 
-        parentNameComboBox.placeholderProperty().addListener((x, y, z) -> {
+        parentNameComboBox.itemsProperty().addListener((x, y, z) -> {
            try{
                 ListCell<String> str = parentNameComboBox.getButtonCell();
                 String str2 = str.toString();

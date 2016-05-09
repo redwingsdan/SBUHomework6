@@ -26,8 +26,8 @@
                     ]
                 }
             ],
-            "LayoutX":"213.0",
-            "LayoutY":"184.0",
+            "LayoutX":"240.0",
+            "LayoutY":"261.0",
             "Scale_X":"2.7606616157768404",
             "Scale_Y":"3.9590963461272612"
         },
@@ -65,14 +65,14 @@
                     ]
                 }
             ],
-            "LayoutX":"893.0",
-            "LayoutY":"146.0",
+            "LayoutX":"697.0",
+            "LayoutY":"148.0",
             "Scale_X":"2.0132177288943875",
             "Scale_Y":"3.2346604434912765"
         },
         {
-            "Class Name":"Random name",
-            "Package Name":"Insert_Package_Name",
+            "Class Name":"NewClassName",
+            "Package Name":"Package2",
             "Parents":"",
             "Is Interface":"yes",
             "Is Abstract":"no",
@@ -95,8 +95,8 @@
                     ]
                 }
             ],
-            "LayoutX":"582.0",
-            "LayoutY":"529.0",
+            "LayoutX":"724.0",
+            "LayoutY":"583.0",
             "Scale_X":"3.6987808222681853",
             "Scale_Y":"5.793817317527881"
         }
