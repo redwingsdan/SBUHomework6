@@ -8,9 +8,13 @@ import jclassdesigner.data.Rectangles;
 import jclassdesigner.data.DataManager;
 import jclassdesigner.gui.Workspace;
 import java.util.ArrayList;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import jclassdesigner.data.Methods;
 import jclassdesigner.data.Variables;
@@ -39,6 +43,8 @@ public class PageEditController
     double yPos;
     double startX;
     double startY;
+    ObservableList<Object> vars;
+    ObservableList<Object> meths;
     
     public PageEditController(AppTemplate initApp) 
     {
@@ -50,6 +56,11 @@ public class PageEditController
         classResizing = false;
     }
 
+    public Rectangles getSelected()
+    {
+        return selectedRect;
+    }
+    
     public ArrayList<Rectangles> getClasses() 
     {
         return classes;
@@ -138,12 +149,40 @@ public class PageEditController
         DataManager dataManager = (DataManager) app.getDataComponent();
         Workspace workspace = (Workspace) app.getWorkspaceComponent();
        // workspace.reloadWorkspace();
-        String name = "TestName";
-        String retVal = "int";
-        String access = "public";
-        Boolean isStatic = true;
+        
+        TextField name1 = workspace.getVarName();
+        String name = name1.getText();
+        if(name == null)
+        {
+           name = "TestName";
+        }
+        TextField retVal1 = workspace.getVarType();
+        String retVal = retVal1.getText();
+        if(retVal == "")
+        {
+            retVal = "int";
+        }
+        TextField access1 = workspace.getVarAccess(); 
+        String access = access1.getText();
+        if(access == "")
+        {
+            access = "public";
+        }
+        TextField isStatic1 = workspace.getVarStatic();
+        String isStatic2;
+        isStatic2 = isStatic1.getText();
+        if(isStatic2 == "")
+        {
+            isStatic2 = "true";
+        }
+        Boolean isStatic = false;
+        if(isStatic2 == "true")
+        {
+           isStatic = true; 
+        }
         Variables var = new Variables(name, retVal, access, isStatic);
         variables.add(var);
+        vars.add(var);
         selectedRect.getVariables().add(var);       
         workspace.reloadWorkspace();
         return var;
@@ -156,10 +195,10 @@ public class PageEditController
         gui.getSelectButton().setDisable(false);
         DataManager dataManager = (DataManager) app.getDataComponent();
         Workspace workspace = (Workspace) app.getWorkspaceComponent();
-
+        Variables var = selectedRect.getVariables().get(selectedRect.getVariables().size()-1);
         selectedRect.getVariables().remove(selectedRect.getVariables().size()-1);
         workspace.reloadWorkspace();
-        return selectedRect.getVariables().get(selectedRect.getVariables().size()-1);
+        return var;
     }
     
     public Methods removeMethodRequestHandler()
@@ -169,10 +208,11 @@ public class PageEditController
         gui.getSelectButton().setDisable(false);
         DataManager dataManager = (DataManager) app.getDataComponent();
         Workspace workspace = (Workspace) app.getWorkspaceComponent();
-        
+        Methods meth = selectedRect.getMethods().get(selectedRect.getMethods().size()-1);
         selectedRect.getMethods().remove(selectedRect.getMethods().size()-1);
+
         workspace.reloadWorkspace();
-        return selectedRect.getMethods().get(selectedRect.getMethods().size()-1);
+        return meth;
     }
     
     public Methods addMethodRequestHandler() 
@@ -184,12 +224,53 @@ public class PageEditController
         DataManager dataManager = (DataManager) app.getDataComponent();
         Workspace workspace = (Workspace) app.getWorkspaceComponent();
        // workspace.reloadWorkspace();
-        String name = "TestName";
-        String retVal = "Returns val";
-        String access = "public";
+        TextField name1 = workspace.getMethName();
+        String name = name1.getText();
+        if(name == null)
+        {
+           name = "TestName";
+        }
+        TextField retVal1 = workspace.getMethType();
+        String retVal = retVal1.getText();
+        if(retVal == "")
+        {
+            retVal = "int";
+        }
+        TextField access1 = workspace.getMethAccess(); 
+        String access = access1.getText();
+        if(access == "")
+        {
+            access = "public";
+        }
+        TextField isStatic1 = workspace.getMethStatic();
+        String isStatic2;
+        isStatic2 = isStatic1.getText();
+        if(isStatic2 == "")
+        {
+            isStatic2 = "true";
+        }
         Boolean isStatic = false;
+        if(isStatic2 == "true")
+        {
+           isStatic = true; 
+        }
+        TextField isAbstract1 = workspace.getMethAbstract();
+        String isAbstract2;
+        isAbstract2 = isAbstract1.getText();
+        if(isAbstract2 == "")
+        {
+            isAbstract2 = "true";
+        }
         Boolean isAbstract = false;
+        if(isAbstract2 == "true")
+        {
+           isStatic = true; 
+        }
+        TextField args1 = workspace.getMethArgs();
+        String args = args1.getText();
+
         Methods meth = new Methods(name, retVal, isStatic, isAbstract, access);
+        meths.add(meth);
         selectedRect.getMethods().add(meth);       
         workspace.reloadWorkspace();
         return meth;
@@ -236,6 +317,7 @@ public class PageEditController
         double difX = 0.0;
         double difY = 0.0;
         
+        
         if(classResizing == true)
         {
             classBox.setOnMousePressed(pressed -> {
@@ -253,6 +335,10 @@ public class PageEditController
                 }).forEach((movableClass) -> {
                     workspace.getPackageNameTextField().setText(movableClass.getPackageName());
                     selectedRect = movableClass;
+                    workspace.getMethTable();
+                    workspace.getVarTable();
+                    meths = FXCollections.observableArrayList();
+                    vars = FXCollections.observableArrayList();
                 });
 
             classes.stream().filter((movableClass) -> ((Pane) movableClass == classBox)).filter((movableClass) -> (gui.getPrimaryScene().getCursor().toString().equals("DEFAULT") && movableClass.isSelected())).map((movableClass) -> {
@@ -305,6 +391,10 @@ public class PageEditController
                 }).forEach((movableClass) -> {
                     workspace.getPackageNameTextField().setText(movableClass.getPackageName());
                     selectedRect = movableClass;
+                    TableView meths1 = workspace.getMethTable();
+                    TableView vars1 = workspace.getVarTable();
+                    meths = FXCollections.observableArrayList();
+                    vars = FXCollections.observableArrayList();
                 });
             }
 

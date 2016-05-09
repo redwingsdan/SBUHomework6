@@ -8,6 +8,42 @@
             "Is Interface":"no",
             "Is Abstract":"no",
             "Variables":[
+                {
+                    "Variable Name":"TestName",
+                    "Type":"Returns val",
+                    "Access":"public",
+                    "Is Static":"yes"
+                }
+            ],
+            "Methods":[
+                {
+                    "Method Name":"TestName",
+                    "Type":"Returns val",
+                    "Access":"public",
+                    "Is Static":"no",
+                    "Is Abstract":"no",
+                    "Arguments":[
+                    ]
+                }
+            ],
+            "LayoutX":"240.0",
+            "LayoutY":"186.0",
+            "Scale_X":"2.7606616157768404",
+            "Scale_Y":"3.9590963461272612"
+        },
+        {
+            "Class Name":"Insert_Class_Name",
+            "Package Name":"Insert_Package_Name",
+            "Parents":"",
+            "Is Interface":"no",
+            "Is Abstract":"no",
+            "Variables":[
+                {
+                    "Variable Name":"TestName",
+                    "Type":"Returns val",
+                    "Access":"public",
+                    "Is Static":"yes"
+                }
             ],
             "Methods":[
                 {
@@ -29,25 +65,40 @@
                     ]
                 }
             ],
-            "LayoutX":"266.0",
-            "LayoutY":"192.0",
-            "Scale_X":"3.930303737963093",
-            "Scale_Y":"3.756628664826646"
+            "LayoutX":"712.0",
+            "LayoutY":"168.0",
+            "Scale_X":"2.0132177288943875",
+            "Scale_Y":"3.2346604434912765"
         },
         {
-            "Class Name":"Test",
+            "Class Name":"Random name",
             "Package Name":"Insert_Package_Name",
             "Parents":"",
-            "Is Interface":"no",
+            "Is Interface":"yes",
             "Is Abstract":"no",
             "Variables":[
+                {
+                    "Variable Name":"name",
+                    "Type":"int",
+                    "Access":"public",
+                    "Is Static":"no"
+                }
             ],
             "Methods":[
+                {
+                    "Method Name":"TestMethod",
+                    "Type":"String",
+                    "Access":"private",
+                    "Is Static":"no",
+                    "Is Abstract":"no",
+                    "Arguments":[
+                    ]
+                }
             ],
-            "LayoutX":"879.0",
-            "LayoutY":"215.0",
-            "Scale_X":"2.5589159328286786",
-            "Scale_Y":"2.911359977295823"
+            "LayoutX":"582.0",
+            "LayoutY":"529.0",
+            "Scale_X":"1.9550957766398926",
+            "Scale_Y":"3.6740915528897506"
         }
     ]
 }

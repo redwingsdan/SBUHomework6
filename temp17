@@ -18,24 +18,15 @@
                     "Is Abstract":"no",
                     "Arguments":[
                     ]
-                },
-                {
-                    "Method Name":"TestName",
-                    "Type":"Returns val",
-                    "Access":"public",
-                    "Is Static":"no",
-                    "Is Abstract":"no",
-                    "Arguments":[
-                    ]
                 }
             ],
-            "LayoutX":"266.0",
-            "LayoutY":"192.0",
-            "Scale_X":"3.930303737963093",
-            "Scale_Y":"3.756628664826646"
+            "LayoutX":"334.0",
+            "LayoutY":"278.0",
+            "Scale_X":"2.7606616157768404",
+            "Scale_Y":"3.9590963461272612"
         },
         {
-            "Class Name":"Test",
+            "Class Name":"Insert_Class_Name",
             "Package Name":"Insert_Package_Name",
             "Parents":"",
             "Is Interface":"no",
@@ -44,10 +35,10 @@
             ],
             "Methods":[
             ],
-            "LayoutX":"879.0",
-            "LayoutY":"215.0",
-            "Scale_X":"2.5589159328286786",
-            "Scale_Y":"2.911359977295823"
+            "LayoutX":"798.0",
+            "LayoutY":"286.0",
+            "Scale_X":"2.0132177288943875",
+            "Scale_Y":"3.2346604434912765"
         }
     ]
 }

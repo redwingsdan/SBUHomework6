@@ -2,12 +2,18 @@
 {
     "UML Diagram":[
         {
-            "Class Name":"Insert_Class_Name",
+            "Class Name":"Sample",
             "Package Name":"Insert_Package_Name",
             "Parents":"",
             "Is Interface":"no",
             "Is Abstract":"no",
             "Variables":[
+                {
+                    "Variable Name":"TestName",
+                    "Type":"Returns val",
+                    "Access":"public",
+                    "Is Static":"yes"
+                }
             ],
             "Methods":[
                 {
@@ -20,10 +26,79 @@
                     ]
                 }
             ],
-            "LayoutX":"327.0",
-            "LayoutY":"209.0",
-            "Scale_X":"3.1288628022048672",
-            "Scale_Y":"4.537247808921648"
+            "LayoutX":"213.0",
+            "LayoutY":"184.0",
+            "Scale_X":"2.7606616157768404",
+            "Scale_Y":"3.9590963461272612"
+        },
+        {
+            "Class Name":"Insert_Class_Name",
+            "Package Name":"Insert_Package_Name",
+            "Parents":"",
+            "Is Interface":"no",
+            "Is Abstract":"no",
+            "Variables":[
+                {
+                    "Variable Name":"TestName",
+                    "Type":"Returns val",
+                    "Access":"public",
+                    "Is Static":"yes"
+                }
+            ],
+            "Methods":[
+                {
+                    "Method Name":"TestName",
+                    "Type":"Returns val",
+                    "Access":"public",
+                    "Is Static":"no",
+                    "Is Abstract":"no",
+                    "Arguments":[
+                    ]
+                },
+                {
+                    "Method Name":"TestName",
+                    "Type":"Returns val",
+                    "Access":"public",
+                    "Is Static":"no",
+                    "Is Abstract":"no",
+                    "Arguments":[
+                    ]
+                }
+            ],
+            "LayoutX":"893.0",
+            "LayoutY":"146.0",
+            "Scale_X":"2.0132177288943875",
+            "Scale_Y":"3.2346604434912765"
+        },
+        {
+            "Class Name":"Random name",
+            "Package Name":"Insert_Package_Name",
+            "Parents":"",
+            "Is Interface":"yes",
+            "Is Abstract":"no",
+            "Variables":[
+                {
+                    "Variable Name":"name",
+                    "Type":"int",
+                    "Access":"public",
+                    "Is Static":"no"
+                }
+            ],
+            "Methods":[
+                {
+                    "Method Name":"TestMethod",
+                    "Type":"String",
+                    "Access":"private",
+                    "Is Static":"no",
+                    "Is Abstract":"no",
+                    "Arguments":[
+                    ]
+                }
+            ],
+            "LayoutX":"582.0",
+            "LayoutY":"529.0",
+            "Scale_X":"1.8803257471598958",
+            "Scale_Y":"3.8602016817415783"
         }
     ]
 }

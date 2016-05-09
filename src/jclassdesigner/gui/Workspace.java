@@ -1,5 +1,6 @@
 package jclassdesigner.gui;
 
+import java.awt.Checkbox;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -21,6 +22,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.SnapshotParameters;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBase;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
@@ -123,6 +125,12 @@ public class Workspace extends AppWorkspaceComponent {
     TableColumn<Object, CheckBox> variablesStaticColumn;
     TableColumn<Object, String> variablesAccessColumn;
     HBox variablesTableHBox;
+    TextField variablesName;
+    TextField variablesType;
+    TextField variablesStatic;
+    TextField variablesAccess;
+    Button addVar;
+    
 
     Label methodsLabel;
     HBox methodsHBox;
@@ -140,6 +148,12 @@ public class Workspace extends AppWorkspaceComponent {
     TableColumn<Object, String> methodsAccessColumn;
     TableColumn<Object, String> methodsArgs1Column;
     HBox methodsTableHBox;
+    TextField methodsName;
+    TextField methodsType;
+    TextField methodsStatic;
+    TextField methodsAccess;
+    TextField methodsArgs;
+    TextField methodsAbstract;
 
     Text debugText;
 
@@ -218,6 +232,15 @@ public class Workspace extends AppWorkspaceComponent {
         variablesAccessColumn.setResizable(false);
         variablesAccessColumn.prefWidthProperty().bind(variablesTablePane.widthProperty().multiply(0.25));
         variablesTable.getColumns().addAll(variablesNameColumn, variablesTypeColumn, variablesStaticColumn, variablesAccessColumn);
+        variablesName = new TextField();
+        variablesName.setMaxWidth(200);
+        variablesType = new TextField();
+        variablesType.setMaxWidth(200);
+        variablesStatic = new TextField();
+        variablesStatic.setMaxWidth(200);
+        variablesAccess = new TextField();
+        variablesAccess.setMaxWidth(200);
+        addVar = new Button("Add");
 
         variablesTablePane.setContent(variablesTable);
         variablesTableHBox = new HBox(10);
@@ -261,12 +284,24 @@ public class Workspace extends AppWorkspaceComponent {
         methodsArgs1Column.setResizable(false);
         methodsArgs1Column.prefWidthProperty().bind(methodsTablePane.widthProperty().multiply(0.16));
         methodsTable.getColumns().addAll(methodsNameColumn, methodsReturnColumn, methodsStaticColumn, methodsAbstractColumn, methodsAccessColumn, methodsArgs1Column);
+        methodsName = new TextField();
+        methodsName.setMaxWidth(200);
+        methodsType = new TextField();
+        methodsType.setMaxWidth(200);
+        methodsStatic = new TextField();
+        methodsStatic.setMaxWidth(200);
+        methodsAccess = new TextField();
+        methodsAccess.setMaxWidth(200);
+        methodsAbstract = new TextField();
+        methodsAbstract.setMaxWidth(200);
+        methodsArgs = new TextField();
+        methodsArgs.setMaxWidth(200);
 
         methodsTablePane.setContent(methodsTable);
         methodsTableHBox = new HBox(10);
         methodsTableHBox.getChildren().add(methodsTablePane);
 
-        optionsPaneOrganizer.getChildren().addAll(className, packageName, parentName, variablesHBox, variablesTableHBox, methodsHBox, methodsTableHBox);
+        optionsPaneOrganizer.getChildren().addAll(className, packageName, parentName, variablesHBox, variablesTableHBox, variablesName,variablesType, variablesStatic ,variablesAccess, methodsHBox, methodsTableHBox, methodsName, methodsType,methodsStatic, methodsAbstract, methodsAccess);
 
         optionsPane.getChildren().addAll(optionsPaneOrganizer);
         optionsPane.setPrefWidth(gui.getPrimaryScene().getWidth());
@@ -416,7 +451,7 @@ public class Workspace extends AppWorkspaceComponent {
             public void handle(Event event) {
                // System.out.println("added method");
                 Methods meth = pageEditController.addMethodRequestHandler();
-                meths.add(meth);              
+                meths.add(meth);
             }
         };
         EventHandler handler4 = null;
@@ -479,6 +514,66 @@ public class Workspace extends AppWorkspaceComponent {
                 methodsTable.setEditable(true);
     }
 
+    public TextField getVarName()
+    {
+        return variablesName;
+    }
+    
+    public TextField getVarType()
+    {
+        return variablesType;
+    }
+    
+    public TextField getVarStatic()
+    {
+        return variablesStatic;
+    }
+    
+    public TextField getVarAccess()
+    {
+        return variablesAccess;
+    }
+    
+    public TextField getMethName()
+    {
+        return methodsName;
+    }
+    
+    public TextField getMethType()
+    {
+        return methodsType;
+    }
+    
+    public TextField getMethStatic()
+    {
+        return methodsStatic;
+    }
+    
+    public TextField getMethAccess()
+    {
+        return methodsAccess;
+    }
+    
+    public TextField getMethAbstract()
+    {
+        return methodsAbstract;
+    }
+    
+    public TextField getMethArgs()
+    {
+        return methodsArgs;
+    }
+    
+    public TableView getVarTable()
+    {
+      return variablesTable;   
+    }
+    
+    public TableView getMethTable()
+    {
+      return methodsTable;   
+    }
+    
     public void setDebugText(String text) {
         debugText.setText(text);
     }
