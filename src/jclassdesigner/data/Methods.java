@@ -28,7 +28,7 @@ public class Methods
         isAbstract = false;
     }
 
-    public Methods(String name, String val, String access, boolean isStatic, boolean isAbstract) 
+    public Methods(String name, String val, boolean isStatic, boolean isAbstract, String access) 
     {
         this.args = new TreeMap<>();
         this.name = name;

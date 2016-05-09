@@ -12,6 +12,7 @@ import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
+import jclassdesigner.data.Methods;
 import jclassdesigner.data.Variables;
 import jclassdesigner.file.FileManager;
 
@@ -26,6 +27,7 @@ public class PageEditController
     static final String DUPLICATE_TITLE = "Warning";
     static final String DUPLICATE_CLASS_MESSAGE = "There are currently two classes with the same name in the same package";
 
+    Rectangles selectedRect;
     ArrayList<Variables> variables;
     ArrayList<Rectangles> classes;
     AppTemplate app;
@@ -127,39 +129,70 @@ public class PageEditController
         workspace.reloadWorkspace();
     }
     
-    public void addVariableRequestHandler() 
+    public Variables addVariableRequestHandler() 
     {
         classResizing = false;
         classAdding = true;
         gui.getPrimaryScene().setCursor(Cursor.DEFAULT);
         gui.getSelectButton().setDisable(false);
-        
         DataManager dataManager = (DataManager) app.getDataComponent();
         Workspace workspace = (Workspace) app.getWorkspaceComponent();
-        workspace.reloadWorkspace();
-        //workspace.getPackageNameTextField().clear();
-        //workspace.getClassNameTextField().clear(); 
-        //workspace.getPackageNameTextField().setText(DEF_PACKAGE_NAME);
-        //workspace.getClassNameTextField().setText(DEF_CLASS_NAME);
-        
-        //Label className = new Label(DEF_CLASS_NAME);
-        //Rectangles classRect = new Rectangles(className, DEF_PACKAGE_NAME);
-        //classRect.setStyle("-fx-border-width: 5px;" + "-fx-border-color: yellow;");
-        //classRect.setSelected(true);
-        //classes.add(classRect);
+       // workspace.reloadWorkspace();
         String name = "TestName";
-        String retVal = "Returns val";
+        String retVal = "int";
         String access = "public";
         Boolean isStatic = true;
         Variables var = new Variables(name, retVal, access, isStatic);
         variables.add(var);
-        //Node var2 = (Node) var;
-        //dataManager.getNodes().add(var);
-        
-        //workspace.getParentNameComboBox().getItems().addAll(DEF_CLASS_NAME);
-        //dataManager.getNodes().add(classRect);
-        //workspace.getInnerPane().getChildren().add(var);       
+        selectedRect.getVariables().add(var);       
         workspace.reloadWorkspace();
+        return var;
+    }
+    
+    public Variables removeVariableRequestHandler()
+    {
+        classResizing = false;
+        gui.getPrimaryScene().setCursor(Cursor.DEFAULT);
+        gui.getSelectButton().setDisable(false);
+        DataManager dataManager = (DataManager) app.getDataComponent();
+        Workspace workspace = (Workspace) app.getWorkspaceComponent();
+
+        selectedRect.getVariables().remove(selectedRect.getVariables().size()-1);
+        workspace.reloadWorkspace();
+        return selectedRect.getVariables().get(selectedRect.getVariables().size()-1);
+    }
+    
+    public Methods removeMethodRequestHandler()
+    {
+        classResizing = false;
+        gui.getPrimaryScene().setCursor(Cursor.DEFAULT);
+        gui.getSelectButton().setDisable(false);
+        DataManager dataManager = (DataManager) app.getDataComponent();
+        Workspace workspace = (Workspace) app.getWorkspaceComponent();
+        
+        selectedRect.getMethods().remove(selectedRect.getMethods().size()-1);
+        workspace.reloadWorkspace();
+        return selectedRect.getMethods().get(selectedRect.getMethods().size()-1);
+    }
+    
+    public Methods addMethodRequestHandler() 
+    {
+        classResizing = false;
+        classAdding = true;
+        gui.getPrimaryScene().setCursor(Cursor.DEFAULT);
+        gui.getSelectButton().setDisable(false);
+        DataManager dataManager = (DataManager) app.getDataComponent();
+        Workspace workspace = (Workspace) app.getWorkspaceComponent();
+       // workspace.reloadWorkspace();
+        String name = "TestName";
+        String retVal = "Returns val";
+        String access = "public";
+        Boolean isStatic = false;
+        Boolean isAbstract = false;
+        Methods meth = new Methods(name, retVal, isStatic, isAbstract, access);
+        selectedRect.getMethods().add(meth);       
+        workspace.reloadWorkspace();
+        return meth;
     }
     
     public void undoRequestHandler(int COUNT) throws IOException
@@ -219,6 +252,7 @@ public class PageEditController
                     return movableClass;
                 }).forEach((movableClass) -> {
                     workspace.getPackageNameTextField().setText(movableClass.getPackageName());
+                    selectedRect = movableClass;
                 });
 
             classes.stream().filter((movableClass) -> ((Pane) movableClass == classBox)).filter((movableClass) -> (gui.getPrimaryScene().getCursor().toString().equals("DEFAULT") && movableClass.isSelected())).map((movableClass) -> {
@@ -270,6 +304,7 @@ public class PageEditController
                     return movableClass;
                 }).forEach((movableClass) -> {
                     workspace.getPackageNameTextField().setText(movableClass.getPackageName());
+                    selectedRect = movableClass;
                 });
             }
 

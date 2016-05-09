@@ -3,9 +3,16 @@ package jclassdesigner.gui;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.beans.InvalidationListener;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -24,6 +31,7 @@ import static javafx.scene.control.ScrollPane.ScrollBarPolicy.ALWAYS;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
@@ -42,6 +50,8 @@ import static jclassdesigner.PropertyType.MINUS_ICON;
 import jclassdesigner.data.Rectangles;
 import jclassdesigner.controller.PageEditController;
 import jclassdesigner.data.DataManager;
+import jclassdesigner.data.Methods;
+import jclassdesigner.data.Variables;
 import jclassdesigner.file.FileManager;
 import properties_manager.PropertiesManager;
 import saf.ui.AppGUI;
@@ -72,6 +82,8 @@ public class Workspace extends AppWorkspaceComponent {
     int MAXCOUNT = 0;
     boolean flag = false;
     AppTemplate app;
+    ObservableList<Object> vars;
+    ObservableList<Object> meths;
 
     AppGUI gui;
 
@@ -152,6 +164,8 @@ public class Workspace extends AppWorkspaceComponent {
         variablesHBox = new HBox(10);
         methodsHBox = new HBox(10);
         pageEditController = new PageEditController(app);
+        meths = FXCollections.observableArrayList();
+        vars = FXCollections.observableArrayList();
 
         diagramPane.setHbarPolicy(ALWAYS);
         diagramPane.setVbarPolicy(ALWAYS);
@@ -271,22 +285,7 @@ public class Workspace extends AppWorkspaceComponent {
                 {
        
                 }
-        });
-   /*     parentNameComboBox.addEventFilter(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
-             @Override
-            public void handle(MouseEvent event) {
-                try{
-                ListCell<String> str = parentNameComboBox.getButtonCell();
-                String str2 = str.toString();
-                System.out.println(str2);
-                }
-                catch(Exception e)
-                {
-       
-                }
-            }
-        });
-   */     
+        });  
         gui.getAddClassButton().setOnAction(e -> {
             gui.setSelectButtonSelected(false);
             gui.getSelectButton().setDisable(gui.getSelectButtonSelected());
@@ -376,13 +375,13 @@ public class Workspace extends AppWorkspaceComponent {
         });
         
         gui.getZoomInButton().setOnAction(e -> {
-            diagramPane.setScaleX(diagramPane.getScaleX() * 1.02);
-            diagramPane.setScaleY(diagramPane.getScaleY() * 1.02);
+            diagramPane.setScaleX(diagramPane.getScaleX() * 1.01);
+            diagramPane.setScaleY(diagramPane.getScaleY() * 1.01);
         });
         
         gui.getZoomOutButton().setOnAction(e -> {
-            diagramPane.setScaleX(diagramPane.getScaleX() / 1.02);
-            diagramPane.setScaleY(diagramPane.getScaleY() / 1.02);
+            diagramPane.setScaleX(diagramPane.getScaleX() / 1.01);
+            diagramPane.setScaleY(diagramPane.getScaleY() / 1.01);
         });
 
         classNameTextField.textProperty().addListener((x, y, z) -> {
@@ -392,20 +391,47 @@ public class Workspace extends AppWorkspaceComponent {
         packageNameTextField.textProperty().addListener((x, y, z) -> {
             pageEditController.packageNameHandler(packageNameTextField.getText());
         });
- //       EventHandler handler = new EventHandler(<InputEvent>() {
- //       public void handle(InputEvent event) {
- //   }
- //   });
- //       addVariableButton.addEventHandler(MouseEvent.MOUSE_CLICKED, handler);
+
         EventHandler handler = null;
         handler = new EventHandler() {
             @Override
             public void handle(Event event) {
-                System.out.println("added variable");
-                pageEditController.addVariableRequestHandler();
+                //System.out.println("added variable");
+                Variables var = pageEditController.addVariableRequestHandler();
+                vars.add(var);
+            }
+        };
+        EventHandler handler2 = null;
+        handler2 = new EventHandler() {
+            @Override
+            public void handle(Event event) {
+                //System.out.println("removed variable");
+                Variables var = pageEditController.removeVariableRequestHandler();
+                vars.remove(var);
+            }
+        };
+        EventHandler handler3 = null;
+        handler3 = new EventHandler() {
+            @Override
+            public void handle(Event event) {
+               // System.out.println("added method");
+                Methods meth = pageEditController.addMethodRequestHandler();
+                meths.add(meth);              
+            }
+        };
+        EventHandler handler4 = null;
+        handler4 = new EventHandler() {
+            @Override
+            public void handle(Event event) {
+                //System.out.println("removed method");
+                Methods meth = pageEditController.removeMethodRequestHandler();
+                meths.remove(meth);
             }
         };
         addVariableButton.addEventHandler(MouseEvent.MOUSE_CLICKED, handler);
+        removeVariableButton.addEventHandler(MouseEvent.MOUSE_CLICKED, handler2);
+        addMethodButton.addEventHandler(MouseEvent.MOUSE_CLICKED, handler3);
+        removeMethodButton.addEventHandler(MouseEvent.MOUSE_CLICKED, handler4);
         
         gui.getCodeButton().setOnAction(e -> {
             FileManager fileManager = (FileManager) (app.getFileComponent());
@@ -416,6 +442,41 @@ public class Workspace extends AppWorkspaceComponent {
             } catch (IOException io) {
             }
         });
+        
+        variablesNameColumn.setCellValueFactory(
+                            new PropertyValueFactory<>("Name")
+                        );
+                variablesTypeColumn.setCellValueFactory(
+                            new PropertyValueFactory<>("Types")
+                        );
+                variablesStaticColumn.setCellValueFactory(
+                            new PropertyValueFactory<>("Static")
+                        );
+                variablesAccessColumn.setCellValueFactory(
+                            new PropertyValueFactory<>("Access")
+                        );
+                variablesTable.setItems((ObservableList<Object>) vars);
+                variablesTable.setEditable(true);
+        methodsNameColumn.setCellValueFactory(
+                            new PropertyValueFactory<>("Name")
+                        );
+                methodsReturnColumn.setCellValueFactory(
+                            new PropertyValueFactory<>("Type")
+                        );
+                methodsStaticColumn.setCellValueFactory(
+                            new PropertyValueFactory<>("Statics")
+                        );
+                methodsAccessColumn.setCellValueFactory(
+                            new PropertyValueFactory<>("Access")
+                        );
+                methodsAbstractColumn.setCellValueFactory(
+                            new PropertyValueFactory<>("Abstract")
+                        );
+                methodsArgs1Column.setCellValueFactory(
+                            new PropertyValueFactory<>("Args")
+                        );
+                methodsTable.setItems((ObservableList<Object>) meths);
+                methodsTable.setEditable(true);
     }
 
     public void setDebugText(String text) {
@@ -504,17 +565,6 @@ public class Workspace extends AppWorkspaceComponent {
                     getParentNameComboBox().getItems().addAll(umlclass.getClassName());
                 });
             }
-            if(nodes.isEmpty())
-            {
-                gui.getSelectButton().setDisable(true);
-                gui.getRemoveButton().setDisable(true);
-            }
-            else
-            {
-               gui.getSelectButton().setDisable(false); 
-               gui.getRemoveButton().setDisable(false);
-            }
-            
            // System.out.println(nodes.size());
             Iterator iter = innerPane.getChildren().iterator();
             while (iter.hasNext()) {
@@ -550,6 +600,16 @@ public class Workspace extends AppWorkspaceComponent {
             else
             {
                gui.getRedoButton().setDisable(true); 
+            }
+            if(nodes.isEmpty())
+            {
+                gui.getSelectButton().setDisable(true);
+                gui.getRemoveButton().setDisable(true);
+            }
+            else
+            {
+               gui.getSelectButton().setDisable(false); 
+               gui.getRemoveButton().setDisable(false);
             }
             gui.getSaveButton().setDisable(false);
         } catch (Exception e) {

@@ -8,16 +8,37 @@
             "Is Interface":"no",
             "Is Abstract":"no",
             "Variables":[
+                {
+                    "Variable Name":"TestName",
+                    "Type":"Returns val",
+                    "Access":"public",
+                    "Is Static":"yes"
+                },
+                {
+                    "Variable Name":"TestName",
+                    "Type":"Returns val",
+                    "Access":"public",
+                    "Is Static":"yes"
+                }
             ],
             "Methods":[
+                {
+                    "Method Name":"TestName",
+                    "Type":"Returns val",
+                    "Access":"public",
+                    "Is Static":"no",
+                    "Is Abstract":"no",
+                    "Arguments":[
+                    ]
+                }
             ],
-            "LayoutX":"355.0",
-            "LayoutY":"320.0",
-            "Scale_X":"4.628389311604577",
-            "Scale_Y":"4.21393106106785"
+            "LayoutX":"266.0",
+            "LayoutY":"192.0",
+            "Scale_X":"3.930303737963093",
+            "Scale_Y":"3.756628664826646"
         },
         {
-            "Class Name":"ThisClass",
+            "Class Name":"Test",
             "Package Name":"Insert_Package_Name",
             "Parents":"",
             "Is Interface":"no",
@@ -26,10 +47,10 @@
             ],
             "Methods":[
             ],
-            "LayoutX":"605.0",
-            "LayoutY":"471.0",
-            "Scale_X":"2.837628629042272",
-            "Scale_Y":"3.586333361373242"
+            "LayoutX":"840.0",
+            "LayoutY":"193.0",
+            "Scale_X":"2.5589159328286786",
+            "Scale_Y":"2.911359977295823"
         },
         {
             "Class Name":"Insert_Class_Name",
@@ -41,8 +62,8 @@
             ],
             "Methods":[
             ],
-            "LayoutX":"0.0",
-            "LayoutY":"0.0",
+            "LayoutX":"792.0",
+            "LayoutY":"343.0",
             "Scale_X":"1.0",
             "Scale_Y":"1.0"
         }

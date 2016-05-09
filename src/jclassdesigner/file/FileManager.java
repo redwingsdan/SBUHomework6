@@ -33,6 +33,7 @@ import javax.json.JsonReader;
 import javax.json.JsonWriter;
 import javax.json.JsonWriterFactory;
 import javax.json.stream.JsonGenerator;
+import jclassdesigner.gui.Workspace;
 
 /**
  * This class serves as the file management component for this application,
@@ -386,7 +387,7 @@ public class FileManager implements AppFileComponent {
                 isAbstract = false;
             }
 
-            Methods method = new Methods(methodName, returnType, access, isStatic, isAbstract);
+            Methods method = new Methods(methodName, returnType, isStatic, isAbstract, access);
 
             JsonArray argJA = methodJso.getJsonArray(JSON_METHOD_ARGS);
             for (int j = 0; j < argJA.size(); j++) 

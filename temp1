@@ -1,5 +1,74 @@
 
 {
     "UML Diagram":[
+        {
+            "Class Name":"Sample",
+            "Package Name":"Insert_Package_Name",
+            "Parents":"",
+            "Is Interface":"no",
+            "Is Abstract":"no",
+            "Variables":[
+                {
+                    "Variable Name":"TestName",
+                    "Type":"Returns val",
+                    "Access":"public",
+                    "Is Static":"yes"
+                }
+            ],
+            "Methods":[
+                {
+                    "Method Name":"TestName",
+                    "Type":"Returns val",
+                    "Access":"public",
+                    "Is Static":"no",
+                    "Is Abstract":"no",
+                    "Arguments":[
+                    ]
+                }
+            ],
+            "LayoutX":"338.0",
+            "LayoutY":"242.0",
+            "Scale_X":"2.7606616157768404",
+            "Scale_Y":"3.9590963461272612"
+        },
+        {
+            "Class Name":"Insert_Class_Name",
+            "Package Name":"Insert_Package_Name",
+            "Parents":"",
+            "Is Interface":"no",
+            "Is Abstract":"no",
+            "Variables":[
+                {
+                    "Variable Name":"TestName",
+                    "Type":"Returns val",
+                    "Access":"public",
+                    "Is Static":"yes"
+                }
+            ],
+            "Methods":[
+                {
+                    "Method Name":"TestName",
+                    "Type":"Returns val",
+                    "Access":"public",
+                    "Is Static":"no",
+                    "Is Abstract":"no",
+                    "Arguments":[
+                    ]
+                },
+                {
+                    "Method Name":"TestName",
+                    "Type":"Returns val",
+                    "Access":"public",
+                    "Is Static":"no",
+                    "Is Abstract":"no",
+                    "Arguments":[
+                    ]
+                }
+            ],
+            "LayoutX":"770.0",
+            "LayoutY":"236.0",
+            "Scale_X":"2.0132177288943875",
+            "Scale_Y":"3.2346604434912765"
+        }
     ]
 }

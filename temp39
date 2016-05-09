@@ -1,0 +1,65 @@
+
+{
+    "UML Diagram":[
+        {
+            "Class Name":"Sample",
+            "Package Name":"Insert_Package_Name",
+            "Parents":"",
+            "Is Interface":"no",
+            "Is Abstract":"no",
+            "Variables":[
+                {
+                    "Variable Name":"TestName",
+                    "Type":"Returns val",
+                    "Access":"public",
+                    "Is Static":"yes"
+                }
+            ],
+            "Methods":[
+                {
+                    "Method Name":"TestName",
+                    "Type":"Returns val",
+                    "Access":"public",
+                    "Is Static":"no",
+                    "Is Abstract":"no",
+                    "Arguments":[
+                    ]
+                }
+            ],
+            "LayoutX":"266.0",
+            "LayoutY":"192.0",
+            "Scale_X":"3.930303737963093",
+            "Scale_Y":"3.756628664826646"
+        },
+        {
+            "Class Name":"Test",
+            "Package Name":"Insert_Package_Name",
+            "Parents":"",
+            "Is Interface":"no",
+            "Is Abstract":"no",
+            "Variables":[
+            ],
+            "Methods":[
+            ],
+            "LayoutX":"850.0",
+            "LayoutY":"163.0",
+            "Scale_X":"6.445064832275387",
+            "Scale_Y":"4.822453565779371"
+        },
+        {
+            "Class Name":"Insert_Class_Name",
+            "Package Name":"Insert_Package_Name",
+            "Parents":"",
+            "Is Interface":"no",
+            "Is Abstract":"no",
+            "Variables":[
+            ],
+            "Methods":[
+            ],
+            "LayoutX":"792.0",
+            "LayoutY":"343.0",
+            "Scale_X":"2.11800352993045",
+            "Scale_Y":"3.829185113516098"
+        }
+    ]
+}
