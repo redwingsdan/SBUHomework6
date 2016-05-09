@@ -102,6 +102,8 @@ public class FileManager implements AppFileComponent {
         nodes.stream().filter((node) -> (node instanceof Rectangles)).map((node) -> (Rectangles) node).map((umlClass) -> {
             double layoutX = umlClass.getLayoutX();
             double layoutY = umlClass.getLayoutY();
+            double scaleX = umlClass.getScaleX();
+            double scaleY = umlClass.getScaleY();
             String className = umlClass.getClassName();
             String packageName = umlClass.getPackageName();
             String parentName = null;
@@ -152,6 +154,8 @@ public class FileManager implements AppFileComponent {
                     .add(JSON_METHODS, makeJsonMethodsArray(methods))
                     .add(JSON_LAYOUT_X, Double.toString(layoutX))
                     .add(JSON_LAYOUT_Y, Double.toString(layoutY))
+                    .add("Scale_X", Double.toString(scaleX))
+                    .add("Scale_Y", Double.toString(scaleY))
                     .build();
             return umlClassJson;
         }).forEach((umlClassJson) -> {
@@ -326,6 +330,8 @@ public class FileManager implements AppFileComponent {
             double layoutY = Double.valueOf(nodeJso.getString(JSON_LAYOUT_Y));
             umlclass.setLayoutX(layoutX);
             umlclass.setLayoutY(layoutY);
+            umlclass.setScaleX(Double.valueOf(nodeJso.getString("Scale_X")));
+            umlclass.setScaleY(Double.valueOf(nodeJso.getString("Scale_Y")));
 
             nodes.add(umlclass);
         }

@@ -1,18 +1,24 @@
 package jclassdesigner.gui;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
+import javafx.scene.SnapshotParameters;
 import javafx.scene.control.ButtonBase;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.ScrollPane;
 import static javafx.scene.control.ScrollPane.ScrollBarPolicy.ALWAYS;
 import javafx.scene.control.TableColumn;
@@ -20,6 +26,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.image.WritableImage;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
@@ -27,6 +34,9 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
+import javax.imageio.ImageIO;
 import static jclassdesigner.PropertyType.ADD_ICON;
 import static jclassdesigner.PropertyType.MINUS_ICON;
 import jclassdesigner.data.Rectangles;
@@ -37,8 +47,15 @@ import properties_manager.PropertiesManager;
 import saf.ui.AppGUI;
 import saf.AppTemplate;
 import saf.components.AppWorkspaceComponent;
+import static saf.settings.AppPropertyType.LOAD_ERROR_MESSAGE;
+import static saf.settings.AppPropertyType.LOAD_ERROR_TITLE;
+import static saf.settings.AppPropertyType.SAVE_WORK_TITLE;
+import static saf.settings.AppPropertyType.WORK_FILE_EXT;
+import static saf.settings.AppPropertyType.WORK_FILE_EXT_DESC;
 import static saf.settings.AppStartupConstants.FILE_PROTOCOL;
 import static saf.settings.AppStartupConstants.PATH_IMAGES;
+import static saf.settings.AppStartupConstants.PATH_WORK;
+import saf.ui.AppMessageDialogSingleton;
 
 /**
  * This class serves as the workspace component for this application, providing
@@ -51,6 +68,9 @@ public class Workspace extends AppWorkspaceComponent {
     static final String CLASS_HEADING_LABEL = "heading_label";
     static final String CLASS_SUBHEADING_LABEL = "subheading_label";
     static final String CLASS_EDIT_TOOLBAR_ROW = "row";
+    int COUNT = 0;
+    int MAXCOUNT = 0;
+    boolean flag = false;
     AppTemplate app;
 
     AppGUI gui;
@@ -241,6 +261,32 @@ public class Workspace extends AppWorkspaceComponent {
         bigPane.setRight(optionsPane);
         workspace.getChildren().add(bigPane);
 
+        parentNameComboBox.placeholderProperty().addListener((x, y, z) -> {
+           try{
+                ListCell<String> str = parentNameComboBox.getButtonCell();
+                String str2 = str.toString();
+                System.out.println(str2);
+                }
+                catch(Exception e)
+                {
+       
+                }
+        });
+   /*     parentNameComboBox.addEventFilter(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+             @Override
+            public void handle(MouseEvent event) {
+                try{
+                ListCell<String> str = parentNameComboBox.getButtonCell();
+                String str2 = str.toString();
+                System.out.println(str2);
+                }
+                catch(Exception e)
+                {
+       
+                }
+            }
+        });
+   */     
         gui.getAddClassButton().setOnAction(e -> {
             gui.setSelectButtonSelected(false);
             gui.getSelectButton().setDisable(gui.getSelectButtonSelected());
@@ -259,12 +305,84 @@ public class Workspace extends AppWorkspaceComponent {
             pageEditController.selectRequestHandler();
         });
         
+        gui.getResizeButton().setOnAction(e -> {
+            gui.setSelectButtonSelected(true);
+            pageEditController.selectRequestHandler2();
+        });
+        
+        gui.getUndoButton().setOnAction(e -> {
+            if(COUNT >= 2)
+            {
+                FileManager fileManager = (FileManager) app.getFileComponent();
+                DataManager dataManager = (DataManager) app.getDataComponent();
+                try {
+                    fileManager.loadData(dataManager, "temp" + (COUNT-1) );
+                } catch (IOException ex) {
+                    Logger.getLogger(Workspace.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                 flag = true;
+                COUNT -= 1;
+                reloadWorkspace();
+            }
+        });
+        
+        gui.getRedoButton().setOnAction(e -> {
+            if(COUNT < MAXCOUNT)
+            {
+                FileManager fileManager = (FileManager) app.getFileComponent();
+                DataManager dataManager = (DataManager) app.getDataComponent();
+                try {
+                    fileManager.loadData(dataManager, "temp" + (COUNT+1) );
+                } catch (IOException ex) {
+                    Logger.getLogger(Workspace.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                 flag = true;
+                COUNT += 1;
+                reloadWorkspace();
+            }
+        });
+        
+        gui.getPhotoButton().addEventFilter(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                WritableImage snapshot = diagramPane.snapshot(new SnapshotParameters(), null);
+                PropertiesManager props = PropertiesManager.getPropertiesManager();
+                        FileChooser fc = new FileChooser();
+                        fc.setInitialDirectory(new File(PATH_WORK));
+                        fc.setTitle(props.getProperty(SAVE_WORK_TITLE));
+                        fc.getExtensionFilters().addAll(
+                                new ExtensionFilter(props.getProperty(WORK_FILE_EXT_DESC), props.getProperty(WORK_FILE_EXT)));
+                        File selectedFile = fc.showSaveDialog(app.getGUI().getWindow());
+                try
+                  {
+                  File file = new File("Photo.png");
+                  file = selectedFile;
+                  File file2 = new File(file.getPath() + ".png");
+                  ImageIO.write(SwingFXUtils.fromFXImage(snapshot, null), "png", file2);
+                  }
+                catch(Exception e)
+                  {
+                      
+                  }
+            }
+        });
+        
         gui.getRemoveButton().setOnAction(e -> {
            DataManager dataManager = (DataManager) app.getDataComponent();
            ArrayList<Node> nodes = dataManager.getNodes();
            Rectangles r = (Rectangles) dataManager.getSelected();
            nodes.remove(r);
            reloadWorkspace();
+        });
+        
+        gui.getZoomInButton().setOnAction(e -> {
+            diagramPane.setScaleX(diagramPane.getScaleX() * 1.02);
+            diagramPane.setScaleY(diagramPane.getScaleY() * 1.02);
+        });
+        
+        gui.getZoomOutButton().setOnAction(e -> {
+            diagramPane.setScaleX(diagramPane.getScaleX() / 1.02);
+            diagramPane.setScaleY(diagramPane.getScaleY() / 1.02);
         });
 
         classNameTextField.textProperty().addListener((x, y, z) -> {
@@ -284,6 +402,7 @@ public class Workspace extends AppWorkspaceComponent {
             @Override
             public void handle(Event event) {
                 System.out.println("added variable");
+                pageEditController.addVariableRequestHandler();
             }
         };
         addVariableButton.addEventHandler(MouseEvent.MOUSE_CLICKED, handler);
@@ -366,7 +485,7 @@ public class Workspace extends AppWorkspaceComponent {
         try {
             innerPane.getChildren().clear();
             gui.getPrimaryScene().setCursor(Cursor.DEFAULT);
-            
+            getParentNameComboBox().getItems().remove(0, getParentNameComboBox().getItems().size());
             DataManager dataManager = (DataManager) app.getDataComponent();
             ArrayList<Node> nodes = dataManager.getNodes();
             if (!nodes.isEmpty()) {
@@ -382,6 +501,7 @@ public class Workspace extends AppWorkspaceComponent {
                     return umlclass;
                 }).forEach((umlclass) -> {
                     innerPane.getChildren().add(umlclass);
+                    getParentNameComboBox().getItems().addAll(umlclass.getClassName());
                 });
             }
             if(nodes.isEmpty())
@@ -394,6 +514,7 @@ public class Workspace extends AppWorkspaceComponent {
                gui.getSelectButton().setDisable(false); 
                gui.getRemoveButton().setDisable(false);
             }
+            
            // System.out.println(nodes.size());
             Iterator iter = innerPane.getChildren().iterator();
             while (iter.hasNext()) {
@@ -406,7 +527,36 @@ public class Workspace extends AppWorkspaceComponent {
                     myClass.setSelected(false);
                 });
             }
+            FileManager fileManager = (FileManager) app.getFileComponent();
+            fileManager.saveData(dataManager, "temp" + COUNT);
+            if(flag == false)
+            {
+            MAXCOUNT = COUNT;
+            COUNT += 1;
+            flag = false;
+            }
+            if(COUNT > 1)
+            {
+                gui.getUndoButton().setDisable(false);
+            }
+            else
+            {
+                gui.getUndoButton().setDisable(true);
+            }
+            if(COUNT < (MAXCOUNT))
+            {
+                gui.getRedoButton().setDisable(false);
+            }
+            else
+            {
+               gui.getRedoButton().setDisable(true); 
+            }
+            gui.getSaveButton().setDisable(false);
         } catch (Exception e) {
         }
+    }
+
+    private void addEventFilter(EventType<MouseEvent> MOUSE_CLICKED, EventHandler<MouseEvent> eventHandler) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

@@ -1,0 +1,31 @@
+
+{
+    "UML Diagram":[
+        {
+            "Class Name":"class2",
+            "Package Name":"Insert_Package_Name",
+            "Parents":"",
+            "Is Interface":"no",
+            "Is Abstract":"no",
+            "Variables":[
+            ],
+            "Methods":[
+            ],
+            "LayoutX":"833.0",
+            "LayoutY":"111.0"
+        },
+        {
+            "Class Name":"class1",
+            "Package Name":"Insert_Package_Name",
+            "Parents":"",
+            "Is Interface":"yes",
+            "Is Abstract":"no",
+            "Variables":[
+            ],
+            "Methods":[
+            ],
+            "LayoutX":"453.0",
+            "LayoutY":"258.0"
+        }
+    ]
+}

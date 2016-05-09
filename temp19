@@ -1,0 +1,35 @@
+
+{
+    "UML Diagram":[
+        {
+            "Class Name":"Sample",
+            "Package Name":"Insert_Package_Name",
+            "Parents":"",
+            "Is Interface":"no",
+            "Is Abstract":"no",
+            "Variables":[
+            ],
+            "Methods":[
+            ],
+            "LayoutX":"355.0",
+            "LayoutY":"320.0",
+            "Scale_X":"4.628389311604577",
+            "Scale_Y":"4.21393106106785"
+        },
+        {
+            "Class Name":"ThisClass",
+            "Package Name":"Insert_Package_Name",
+            "Parents":"",
+            "Is Interface":"no",
+            "Is Abstract":"no",
+            "Variables":[
+            ],
+            "Methods":[
+            ],
+            "LayoutX":"755.0",
+            "LayoutY":"278.0",
+            "Scale_X":"1.0104527324105048",
+            "Scale_Y":"1.0287969451662609"
+        }
+    ]
+}

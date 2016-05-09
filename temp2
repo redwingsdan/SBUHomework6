@@ -1,0 +1,20 @@
+
+{
+    "UML Diagram":[
+        {
+            "Class Name":"Insert_Class_Name",
+            "Package Name":"Insert_Package_Name",
+            "Parents":"",
+            "Is Interface":"no",
+            "Is Abstract":"no",
+            "Variables":[
+            ],
+            "Methods":[
+            ],
+            "LayoutX":"0.0",
+            "LayoutY":"0.0",
+            "Scale_X":"1.0",
+            "Scale_Y":"1.0"
+        }
+    ]
+}
